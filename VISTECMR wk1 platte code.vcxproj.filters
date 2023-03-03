@@ -65,6 +65,9 @@
     <ClCompile Include="rendering\model.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="rendering\Camera.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderModel.h">
@@ -80,6 +83,9 @@
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
     <ClInclude Include="rendering\model.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\Camera.h">
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
   </ItemGroup>

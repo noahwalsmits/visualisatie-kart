@@ -8,6 +8,7 @@
 #include "rendering/Shader.h"
 #include "stb_image.h"
 #include "rendering/model.h"
+#include "rendering/Camera.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
@@ -15,9 +16,7 @@ GLuint modelViewUniform;
 GLuint timeUniform;
 double lastTime;
 
-float cameraX = 0.0f;
-float cameraY = 0.0f;
-float cameraZ = 0.0f;
+Camera* camera;
 
 //RenderModel renderModel("egg1/egg1.obj");//
 Model* eggCar; //TODO use references instead
@@ -48,6 +47,8 @@ void init()
 	glEnable(GL_BLEND);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
+	camera = new Camera();
+
 	eggCar = new Model("assets/egg1/egg1.obj"); //TODO clean up memory
 
 	shader = new Shader("model.vs", "model.fs"); //TODO clean up memory
@@ -77,10 +78,11 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 mvp = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	mvp = glm::translate(mvp, glm::vec3(cameraX, cameraY, cameraZ)); //move camera
+	
 	float cameraRotationX = sin(glfwGetTime()) * 2.0f;
 	float cameraRotationZ = cos(glfwGetTime()) * 2.0f;
-	mvp *= glm::lookAt(glm::vec3(cameraRotationX, 0.0f, cameraRotationZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //rotate camera round point
+	mvp *= camera->getView();
+	//mvp *= glm::lookAt(glm::vec3(cameraRotationX, 0.0f, cameraRotationZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //rotate camera round point
 	glUniformMatrix4fv(modelViewUniform, 1, GL_FALSE, glm::value_ptr(mvp));
 	glUniform1f(timeUniform, (float)lastTime);
 
@@ -100,23 +102,25 @@ void update()
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	//moving the camera
+	float cameraSpeed = 3.0f * elapsed;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraZ += 0.05f;
+		camera->position.z -= cameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraZ -= 0.05f;
+		camera->position.z += cameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraX += 0.05f;
+		camera->position.x -= cameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraX -= 0.05f;
+		camera->position.x += cameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		cameraY += 0.05f;
+		camera->position.y -= cameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		cameraY -= 0.05f;
+		camera->position.y += cameraSpeed;
 }
 
 
