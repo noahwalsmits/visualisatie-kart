@@ -12,9 +12,12 @@
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
-GLuint modelViewUniform;
-GLuint timeUniform;
 double lastTime;
+
+GLuint modelUniform;
+GLuint viewUniform;
+GLuint projectionUniform;
+GLuint timeUniform;
 
 Camera* camera;
 
@@ -55,8 +58,11 @@ void init()
 	shader = new Shader("model.vs", "model.fs");
 	shader->use();
 
-	modelViewUniform = glGetUniformLocation(shader->ID, "modelViewProjectionMatrix");
-	timeUniform = glGetUniformLocation(shader->ID, "time");
+	//create uniforms so we can set values to be used in the shader
+	modelUniform = glGetUniformLocation(shader->ID, "modelMatrix");
+	viewUniform = glGetUniformLocation(shader->ID, "viewMatrix");
+	projectionUniform = glGetUniformLocation(shader->ID, "projectionMatrix");
+	timeUniform = glGetUniformLocation(shader->ID, "time");//
 
 	if (glDebugMessageCallback)
 	{
@@ -65,6 +71,8 @@ void init()
 	}
 
 	lastTime = glfwGetTime();
+
+	std::cout << "completed init" << std::endl;
 }
 
 
@@ -74,22 +82,18 @@ void display()
 	glViewport(0, 0, screenSize.x, screenSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//TODO split model, view and perspective in shaders
-
-	//perspective
-	glm::mat4 mvp = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	
-	//float cameraRotationX = sin(glfwGetTime()) * 2.0f;
-	//float cameraRotationZ = cos(glfwGetTime()) * 2.0f;
-	//mvp *= glm::lookAt(glm::vec3(cameraRotationX, 0.0f, cameraRotationZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //rotate camera round point
+	//projection
+	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
+	glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
 
 	//view
-	mvp *= camera->getView();
+	glm::mat4 view = camera->getView();
+	glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
 
 	//model
-	//TODO
+	//TODO set per model
 
-	glUniformMatrix4fv(modelViewUniform, 1, GL_FALSE, glm::value_ptr(mvp));
+	//time
 	glUniform1f(timeUniform, (float)lastTime);
 
 	eggCar->draw(*shader);

@@ -5,13 +5,13 @@ layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 uniform mat4 modelViewProjectionMatrix;
 
 void main()
 {
-    TexCoords = aTexCoords;    
-    gl_Position = modelViewProjectionMatrix * vec4(aPos, 1.0);
+    TexCoords = aTexCoords;
+    gl_Position = projectionMatrix * viewMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
 }
