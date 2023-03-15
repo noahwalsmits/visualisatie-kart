@@ -17,7 +17,6 @@ double lastTime;
 GLuint modelUniform;
 GLuint viewUniform;
 GLuint projectionUniform;
-GLuint timeUniform;
 
 Camera* camera;
 
@@ -52,8 +51,8 @@ void init()
 
 	camera = new Camera();
 
-	eggCar = new Model("assets/egg1/egg1.obj");
-	driver = new Model("assets/Yoshi/player/P_YS.obj");
+	eggCar = new Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f));
+	driver = new Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f));
 
 	shader = new Shader("model.vs", "model.fs");
 	shader->use();
@@ -62,7 +61,6 @@ void init()
 	modelUniform = glGetUniformLocation(shader->ID, "modelMatrix");
 	viewUniform = glGetUniformLocation(shader->ID, "viewMatrix");
 	projectionUniform = glGetUniformLocation(shader->ID, "projectionMatrix");
-	timeUniform = glGetUniformLocation(shader->ID, "time");//
 
 	if (glDebugMessageCallback)
 	{
@@ -90,14 +88,9 @@ void display()
 	glm::mat4 view = camera->getView();
 	glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
 
-	//model
-	//TODO set per model
-
-	//time
-	glUniform1f(timeUniform, (float)lastTime);
-
-	eggCar->draw(*shader);
-	driver->draw(*shader);
+	//model uniform is set in model draw call
+	eggCar->draw(*shader, modelUniform);
+	driver->draw(*shader, modelUniform);
 
 	glfwSwapBuffers(window);
 }

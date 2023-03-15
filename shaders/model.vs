@@ -8,10 +8,9 @@ out vec2 TexCoords;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform mat4 modelViewProjectionMatrix;
 
 void main()
 {
     TexCoords = aTexCoords;
-    gl_Position = projectionMatrix * viewMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
 }

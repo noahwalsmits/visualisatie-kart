@@ -4,9 +4,15 @@
 #include <iostream>
 #include <glad/glad.h>
 #include "stb_image.h"
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-void Model::draw(Shader &shader)
+void Model::draw(Shader &shader, GLuint& modelUniform)
 {
+	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), this->position);
+	glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+	//draw meshes
 	for (unsigned int i = 0; i < this->meshes.size(); i++) 
 	{
 		this->meshes[i].draw(shader);
