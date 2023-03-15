@@ -19,6 +19,7 @@ double lastTime;
 Camera* camera;
 
 Model* eggCar; //TODO use references instead
+Model* driver;
 Shader* shader;
 
 #ifdef _WIN32
@@ -49,6 +50,7 @@ void init()
 	camera = new Camera();
 
 	eggCar = new Model("assets/egg1/egg1.obj"); //TODO clean up memory
+	driver = new Model("assets/Yoshi/player/P_YS.obj");
 
 	shader = new Shader("model.vs", "model.fs"); //TODO clean up memory
 	shader->use();
@@ -72,16 +74,26 @@ void display()
 	glViewport(0, 0, screenSize.x, screenSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//TODO split model, view and perspective in shaders
+
+	//perspective
 	glm::mat4 mvp = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
 	
-	float cameraRotationX = sin(glfwGetTime()) * 2.0f;
-	float cameraRotationZ = cos(glfwGetTime()) * 2.0f;
-	mvp *= camera->getView();
+	//float cameraRotationX = sin(glfwGetTime()) * 2.0f;
+	//float cameraRotationZ = cos(glfwGetTime()) * 2.0f;
 	//mvp *= glm::lookAt(glm::vec3(cameraRotationX, 0.0f, cameraRotationZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //rotate camera round point
+
+	//view
+	mvp *= camera->getView();
+
+	//model
+	//TODO
+
 	glUniformMatrix4fv(modelViewUniform, 1, GL_FALSE, glm::value_ptr(mvp));
 	glUniform1f(timeUniform, (float)lastTime);
 
 	eggCar->draw(*shader);
+	driver->draw(*shader);
 
 	glfwSwapBuffers(window);
 }
