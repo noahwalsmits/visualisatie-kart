@@ -49,10 +49,10 @@ void init()
 
 	camera = new Camera();
 
-	eggCar = new Model("assets/egg1/egg1.obj"); //TODO clean up memory
+	eggCar = new Model("assets/egg1/egg1.obj");
 	driver = new Model("assets/Yoshi/player/P_YS.obj");
 
-	shader = new Shader("model.vs", "model.fs"); //TODO clean up memory
+	shader = new Shader("model.vs", "model.fs");
 	shader->use();
 
 	modelViewUniform = glGetUniformLocation(shader->ID, "modelViewProjectionMatrix");
@@ -160,4 +160,10 @@ int main(int argc, char* argv[])
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	//clean up pointers
+	free(camera);
+	free(eggCar);
+	free(driver);
+	free(shader);
 }
