@@ -33,7 +33,6 @@
     <ClCompile Include="rendering\Mesh.cpp" />
     <ClCompile Include="rendering\model.cpp" />
     <ClCompile Include="rendering\Shader.cpp" />
-    <ClCompile Include="RenderModel.cpp" />
     <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,7 +40,6 @@
     <ClInclude Include="rendering\Mesh.h" />
     <ClInclude Include="rendering\model.h" />
     <ClInclude Include="rendering\Shader.h" />
-    <ClInclude Include="RenderModel.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

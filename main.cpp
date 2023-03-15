@@ -6,9 +6,9 @@
 #include <iostream>
 #include <fstream>
 #include "rendering/Shader.h"
-#include "stb_image.h"
 #include "rendering/model.h"
 #include "rendering/Camera.h"
+#include "stb_image.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
@@ -18,7 +18,6 @@ double lastTime;
 
 Camera* camera;
 
-//RenderModel renderModel("egg1/egg1.obj");//
 Model* eggCar; //TODO use references instead
 Shader* shader;
 
@@ -57,10 +56,6 @@ void init()
 	modelViewUniform = glGetUniformLocation(shader->ID, "modelViewProjectionMatrix");
 	timeUniform = glGetUniformLocation(shader->ID, "time");
 
-	//glEnableVertexAttribArray(0);//
-	//glEnableVertexAttribArray(1);//
-	//glEnableVertexAttribArray(2);//
-
 	if (glDebugMessageCallback)
 	{
 		glDebugMessageCallback(&onDebug, NULL);
@@ -87,7 +82,6 @@ void display()
 	glUniform1f(timeUniform, (float)lastTime);
 
 	eggCar->draw(*shader);
-	//renderModel.draw();//
 
 	glfwSwapBuffers(window);
 }
