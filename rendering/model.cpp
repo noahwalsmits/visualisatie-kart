@@ -9,7 +9,8 @@
 
 void Model::draw(Shader &shader, GLuint& modelUniform)
 {
-	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), this->position);
+	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), this->position); //TODO store position and let it be changed at runtime
+	//modelMatrix = glm::rotate(modelMatrix, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f)); //TODO add options for rotation and scale
 	glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 	//draw meshes

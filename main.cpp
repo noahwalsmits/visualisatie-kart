@@ -22,6 +22,7 @@ Camera* camera;
 
 Model* eggCar; //TODO use references instead
 Model* driver;
+Model* cucumber;
 Shader* shader;
 
 #ifdef _WIN32
@@ -53,6 +54,7 @@ void init()
 
 	eggCar = new Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f));
 	driver = new Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f));
+	cucumber = new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f));
 
 	shader = new Shader("model.vs", "model.fs");
 	shader->use();
@@ -91,6 +93,7 @@ void display()
 	//model uniform is set in model draw call
 	eggCar->draw(*shader, modelUniform);
 	driver->draw(*shader, modelUniform);
+	cucumber->draw(*shader, modelUniform);
 
 	glfwSwapBuffers(window);
 }
@@ -162,5 +165,6 @@ int main(int argc, char* argv[])
 	free(camera);
 	free(eggCar);
 	free(driver);
+	free(cucumber);
 	free(shader);
 }
