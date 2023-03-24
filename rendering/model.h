@@ -20,6 +20,8 @@ public:
 		this->loadModel(path);
 	}
 	void draw(Shader &shader, GLuint& modelUniform);
+	auto& getBoneInfoMap() { return this->boneInfoMap; }
+	int& getBoneCount() { return this->boneCounter; }
 
 private:
 	glm::vec3 position;
@@ -28,8 +30,6 @@ private:
 
 	std::map<std::string, Mesh::BoneInfo> boneInfoMap;
 	int boneCounter = 0;
-	auto& getBoneInfoMap() { return this->boneInfoMap; }
-	int& getBoneCount() { return this->boneCounter; }
 	void SetVertexBoneDataToDefault(Mesh::Vertex& vertex);
 	void SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight);
 	void ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, aiMesh* mesh, const aiScene* scene);

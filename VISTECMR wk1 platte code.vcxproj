@@ -30,6 +30,9 @@
   <ItemGroup>
     <ClCompile Include="libs\glad\src\glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rendering\animation\Animation.cpp" />
+    <ClCompile Include="rendering\animation\Animator.cpp" />
+    <ClCompile Include="rendering\animation\Bone.cpp" />
     <ClCompile Include="rendering\Camera.cpp" />
     <ClCompile Include="rendering\Mesh.cpp" />
     <ClCompile Include="rendering\model.cpp" />
@@ -38,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssimpGLMHelpers.h" />
+    <ClInclude Include="rendering\animation\Animation.h" />
+    <ClInclude Include="rendering\animation\Animator.h" />
+    <ClInclude Include="rendering\animation\Bone.h" />
     <ClInclude Include="rendering\Camera.h" />
     <ClInclude Include="rendering\Mesh.h" />
     <ClInclude Include="rendering\model.h" />

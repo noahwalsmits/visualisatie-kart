@@ -22,6 +22,12 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{49a128c9-7e55-4108-940d-9a98fe213d41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rendering\animation">
+      <UniqueIdentifier>{960a719c-582b-48c5-a326-b92584b597db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering\animation">
+      <UniqueIdentifier>{b680cdac-b0f0-4ebd-93a9-4851c2c6ba0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\texture.fs">
@@ -68,6 +74,15 @@
     <ClCompile Include="rendering\Camera.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="rendering\animation\Animation.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering\animation\Animator.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering\animation\Bone.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -87,6 +102,15 @@
     </ClInclude>
     <ClInclude Include="AssimpGLMHelpers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Animation.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Animator.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Bone.h">
+      <Filter>Header Files\rendering\animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
