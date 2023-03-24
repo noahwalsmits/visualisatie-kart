@@ -16,10 +16,6 @@ GLFWwindow* window;
 glm::ivec2 screenSize;
 double lastTime;
 
-GLuint modelUniform;
-GLuint viewUniform;
-GLuint projectionUniform;
-
 Camera* camera;
 
 Model* eggCar; //TODO use references instead
@@ -69,11 +65,6 @@ void init()
 	shader = new Shader("model_animated.vs", "model.fs");
 	shader->use();
 
-	//create uniforms so we can set values to be used in the shader
-	modelUniform = glGetUniformLocation(shader->ID, "modelMatrix");
-	viewUniform = glGetUniformLocation(shader->ID, "viewMatrix");
-	projectionUniform = glGetUniformLocation(shader->ID, "projectionMatrix");
-
 	if (glDebugMessageCallback)
 	{
 		glDebugMessageCallback(&onDebug, NULL);
@@ -101,19 +92,18 @@ void display()
 
 	//projection
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
-	//TODO maybe move to: shader->setMat4("projectionMatrix", projection)
+	shader->setMat4("projectionMatrix", projection);
 
 	//view
 	glm::mat4 view = camera->getView();
-	glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
+	shader->setMat4("viewMatrix", view);
 
 	//model uniform is set in model draw call
-	eggCar->draw(*shader, modelUniform);
-	driver->draw(*shader, modelUniform);
-	cucumber->draw(*shader, modelUniform);
+	eggCar->draw(*shader);
+	driver->draw(*shader);
+	cucumber->draw(*shader);
 
-	animatedModel->draw(*shader, modelUniform);
+	animatedModel->draw(*shader);
 
 	glfwSwapBuffers(window);
 }

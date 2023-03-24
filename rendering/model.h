@@ -19,7 +19,7 @@ public:
 		this->position = position;
 		this->loadModel(path);
 	}
-	void draw(Shader &shader, GLuint& modelUniform);
+	void draw(Shader &shader);
 	auto& getBoneInfoMap() { return this->boneInfoMap; }
 	int& getBoneCount() { return this->boneCounter; }
 
