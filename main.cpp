@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "rendering/Shader.h"
 #include "rendering/model.h"
 #include "rendering/Camera.h"
@@ -18,10 +19,10 @@ double lastTime;
 
 Camera* camera;
 
-Model* eggCar; //TODO use references instead
-Model* driver;
-Model* cucumber;
-Shader* shader;
+Shader* staticShader;
+std::vector<Model> staticModels;
+Shader* animatedShader;
+std::vector<Model> animatedModels;
 
 Model* animatedModel;
 Animation* danceAnimation;
@@ -54,16 +55,15 @@ void init()
 
 	camera = new Camera();
 
-	eggCar = new Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f));
-	driver = new Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f));
-	cucumber = new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f));
+	staticModels.push_back(Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f)));
+	staticModels.push_back(Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f)));
+	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
+	staticShader = new Shader("model.vs", "model.fs");
 
 	animatedModel = new Model("assets/vampire/dancing_vampire.dae", glm::vec3(0.0f, 0.0f, 0.0f));
 	danceAnimation = new Animation("assets/vampire/dancing_vampire.dae", animatedModel);
 	animator = new Animator(danceAnimation);
-
-	shader = new Shader("model_animated.vs", "model.fs");
-	shader->use();
+	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
 	{
@@ -83,27 +83,29 @@ void display()
 	glViewport(0, 0, screenSize.x, screenSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//final bone matrices
+	//prepare uniform data
+	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
+	glm::mat4 view = camera->getView();
 	std::vector<glm::mat4> transforms = animator->GetFinalBoneMatrices();
-	for (int i = 0; i < transforms.size(); i++)
+
+	//apply to static shader and draw static models
+	staticShader->use();
+	staticShader->setMat4("projectionMatrix", projection);
+	staticShader->setMat4("viewMatrix", view);
+	for (Model& model : staticModels)
 	{
-		shader->setMat4("finalBoneMatrices[" + std::to_string(i) + "]", transforms[i]);
+		model.draw(*staticShader);
 	}
 
-	//projection
-	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	shader->setMat4("projectionMatrix", projection);
-
-	//view
-	glm::mat4 view = camera->getView();
-	shader->setMat4("viewMatrix", view);
-
-	//model uniform is set in model draw call
-	eggCar->draw(*shader);
-	driver->draw(*shader);
-	cucumber->draw(*shader);
-
-	animatedModel->draw(*shader);
+	//apply to animated shader and draw animated models
+	animatedShader->use();
+	animatedShader->setMat4("projectionMatrix", projection);
+	animatedShader->setMat4("viewMatrix", view);
+	for (int i = 0; i < transforms.size(); i++)
+	{
+		animatedShader->setMat4("finalBoneMatrices[" + std::to_string(i) + "]", transforms[i]);
+	}
+	animatedModel->draw(*animatedShader);
 
 	glfwSwapBuffers(window);
 }
@@ -179,10 +181,9 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	free(camera);
-	free(eggCar);
-	free(driver);
-	free(cucumber);
-	free(shader);
+
+	free(staticShader);
+	free(animatedShader);
 
 	free(animatedModel);
 	free(danceAnimation);
