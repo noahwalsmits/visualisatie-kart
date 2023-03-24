@@ -32,7 +32,7 @@ void Model::SetVertexBoneDataToDefault(Mesh::Vertex& vertex)
 
 void Model::SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight)
 {
-	for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
 	{
 		if (vertex.boneIds[i] < 0)
 		{
@@ -45,7 +45,7 @@ void Model::SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight)
 
 void Model::ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
-	for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
 	{
 		int boneId = -1;
 		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();

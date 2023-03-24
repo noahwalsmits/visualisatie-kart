@@ -16,8 +16,6 @@ public:
 		glm::vec3 normal;
 		glm::vec2 texCoords;
 
-		glm::vec3 tangent;
-		glm::vec3 bitangent;
 		int boneIds[MAX_BONE_INFLUENCE]; //bone indexes that influence this vertex
 		float boneWeights[MAX_BONE_INFLUENCE]; //weights from each bone
 

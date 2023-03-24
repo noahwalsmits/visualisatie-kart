@@ -9,6 +9,8 @@
 #include "rendering/model.h"
 #include "rendering/Camera.h"
 #include "stb_image.h"
+#include "rendering/animation/Animation.h"
+#include "rendering/animation/Animator.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
@@ -24,6 +26,10 @@ Model* eggCar; //TODO use references instead
 Model* driver;
 Model* cucumber;
 Shader* shader;
+
+Model* animatedModel;
+Animation* danceAnimation;
+Animator* animator;
 
 #ifdef _WIN32
 void GLAPIENTRY onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -56,7 +62,11 @@ void init()
 	driver = new Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f));
 	cucumber = new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f));
 
-	shader = new Shader("model.vs", "model.fs");
+	animatedModel = new Model("assets/vampire/dancing_vampire.dae", glm::vec3(0.0f, 0.0f, 0.0f));
+	danceAnimation = new Animation("assets/vampire/dancing_vampire.dae", animatedModel);
+	animator = new Animator(danceAnimation);
+
+	shader = new Shader("model_animated.vs", "model.fs");
 	shader->use();
 
 	//create uniforms so we can set values to be used in the shader
@@ -82,9 +92,17 @@ void display()
 	glViewport(0, 0, screenSize.x, screenSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//final bone matrices
+	std::vector<glm::mat4> transforms = animator->GetFinalBoneMatrices();
+	for (int i = 0; i < transforms.size(); i++)
+	{
+		shader->setMat4("finalBoneMatrices[" + std::to_string(i) + "]", transforms[i]);
+	}
+
 	//projection
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
 	glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
+	//TODO maybe move to: shader->setMat4("projectionMatrix", projection)
 
 	//view
 	glm::mat4 view = camera->getView();
@@ -94,6 +112,8 @@ void display()
 	eggCar->draw(*shader, modelUniform);
 	driver->draw(*shader, modelUniform);
 	cucumber->draw(*shader, modelUniform);
+
+	animatedModel->draw(*shader, modelUniform);
 
 	glfwSwapBuffers(window);
 }
@@ -105,11 +125,17 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
+	animator->UpdateAnimation(elapsed);
+
+	//process keyboard input
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
 	//moving the camera
 	float cameraSpeed = 3.0f * elapsed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		cameraSpeed *= 10.0f;
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera->position.z -= cameraSpeed;
 
@@ -167,4 +193,8 @@ int main(int argc, char* argv[])
 	free(driver);
 	free(cucumber);
 	free(shader);
+
+	free(animatedModel);
+	free(danceAnimation);
+	free(animator);
 }
