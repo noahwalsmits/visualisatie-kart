@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 	glfwTerminate();
 
 	//clean up pointers
-	free(camera);
-	free(staticShader);
-	free(animatedShader);
+	delete(camera);
+	delete(staticShader);
+	delete(animatedShader);
 }
