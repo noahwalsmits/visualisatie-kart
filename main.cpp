@@ -8,10 +8,9 @@
 #include <vector>
 #include "rendering/Shader.h"
 #include "rendering/model.h"
+#include "rendering/animation/AnimatedModel.h"
 #include "rendering/Camera.h"
 #include "stb_image.h"
-#include "rendering/animation/Animation.h"
-#include "rendering/animation/Animator.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
@@ -22,11 +21,8 @@ Camera* camera;
 Shader* staticShader;
 std::vector<Model> staticModels;
 Shader* animatedShader;
-std::vector<Model> animatedModels;
+std::vector<AnimatedModel> animatedModels;
 
-Model* animatedModel;
-Animation* danceAnimation;
-Animator* animator;
 
 #ifdef _WIN32
 void GLAPIENTRY onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -60,9 +56,7 @@ void init()
 	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 
-	animatedModel = new Model("assets/vampire/dancing_vampire.dae", glm::vec3(0.0f, 0.0f, 0.0f));
-	danceAnimation = new Animation("assets/vampire/dancing_vampire.dae", animatedModel);
-	animator = new Animator(danceAnimation);
+	animatedModels.push_back(AnimatedModel("assets/vampire/dancing_vampire.dae", glm::vec3(0.0f, 0.0f, 0.0f)));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
@@ -86,7 +80,6 @@ void display()
 	//prepare uniform data
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
 	glm::mat4 view = camera->getView();
-	std::vector<glm::mat4> transforms = animator->GetFinalBoneMatrices();
 
 	//apply to static shader and draw static models
 	staticShader->use();
@@ -101,11 +94,10 @@ void display()
 	animatedShader->use();
 	animatedShader->setMat4("projectionMatrix", projection);
 	animatedShader->setMat4("viewMatrix", view);
-	for (int i = 0; i < transforms.size(); i++)
+	for (AnimatedModel& model : animatedModels)
 	{
-		animatedShader->setMat4("finalBoneMatrices[" + std::to_string(i) + "]", transforms[i]);
+		model.draw(*animatedShader);
 	}
-	animatedModel->draw(*animatedShader);
 
 	glfwSwapBuffers(window);
 }
@@ -117,7 +109,10 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
-	animator->UpdateAnimation(elapsed);
+	for (AnimatedModel& model : animatedModels)
+	{
+		model.update(elapsed);
+	}
 
 	//process keyboard input
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -181,11 +176,6 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	free(camera);
-
 	free(staticShader);
 	free(animatedShader);
-
-	free(animatedModel);
-	free(danceAnimation);
-	free(animator);
 }

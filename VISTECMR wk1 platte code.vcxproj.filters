@@ -83,6 +83,9 @@
     <ClCompile Include="rendering\animation\Bone.cpp">
       <Filter>Source Files\rendering\animation</Filter>
     </ClCompile>
+    <ClCompile Include="rendering\animation\AnimatedModel.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -110,6 +113,9 @@
       <Filter>Header Files\rendering\animation</Filter>
     </ClInclude>
     <ClInclude Include="rendering\animation\Bone.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\AnimatedModel.h">
       <Filter>Header Files\rendering\animation</Filter>
     </ClInclude>
   </ItemGroup>
