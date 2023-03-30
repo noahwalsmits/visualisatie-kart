@@ -37,7 +37,7 @@ public:
 		else if (m_CurrentTime >= m_CurrentAnimation.GetDuration())
 		{
 			this->finished = true;
-			m_CurrentTime = m_CurrentAnimation.GetDuration() - 0.00001f; //TODO make this less dumb
+			m_CurrentTime = std::nextafter(m_CurrentAnimation.GetDuration(), 0.0f); //set it to a value just under the duration
 		}
 		CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
 	}
