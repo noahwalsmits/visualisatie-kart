@@ -8,66 +8,86 @@
 class Animator
 {
 public:
-    Animator(Animation animation)
-    {
-        m_CurrentTime = 0.0;
-        m_CurrentAnimation = animation; //TODO find out why a pointer doesn't work here
+	Animator(Animation animation)
+	{
+		m_CurrentTime = 0.0;
+		m_CurrentAnimation = animation;
+		//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
 
-        m_FinalBoneMatrices.reserve(100);
+		m_FinalBoneMatrices.reserve(100);
 
-        for (int i = 0; i < 100; i++)
-            m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
-    }
+		for (int i = 0; i < 100; i++)
+		{
+			m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+		}
+	}
 
-    void UpdateAnimation(float dt)
-    {
-        m_DeltaTime = dt;
-        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
-        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
-    }
+	void UpdateAnimation(float dt)
+	{
+		if (this->finished) //TODO support no current animation and check for it here
+		{
+			return;
+		}
 
-    void PlayAnimation(Animation pAnimation)
-    {
-        m_CurrentAnimation = pAnimation;
-        m_CurrentTime = 0.0f;
-    }
+		m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
+		if (this->looping)
+		{
+			m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+		}
+		else if (m_CurrentTime >= m_CurrentAnimation.GetDuration())
+		{
+			this->finished = true;
+			m_CurrentTime = m_CurrentAnimation.GetDuration() - 0.00001f; //TODO make this less dumb
+		}
+		CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
+	}
 
-    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
-    {
-        std::string nodeName = node->name;
-        glm::mat4 nodeTransform = node->transformation;
+	void PlayAnimation(Animation pAnimation, bool loopAnimation = true)
+	{
+		m_CurrentAnimation = pAnimation;
+		m_CurrentTime = 0.0f;
+		this->looping = loopAnimation;
+		this->finished = false;
+	}
 
-        Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+	{
+		std::string nodeName = node->name;
+		glm::mat4 nodeTransform = node->transformation;
 
-        if (Bone)
-        {
-            Bone->Update(m_CurrentTime);
-            nodeTransform = Bone->GetLocalTransform();
-        }
+		Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
 
-        glm::mat4 globalTransformation = parentTransform * nodeTransform;
+		if (Bone)
+		{
+			Bone->Update(m_CurrentTime);
+			nodeTransform = Bone->GetLocalTransform();
+		}
 
-        auto boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
-        if (boneInfoMap.find(nodeName) != boneInfoMap.end())
-        {
-            int index = boneInfoMap[nodeName].id;
-            glm::mat4 offset = boneInfoMap[nodeName].offset;
-            m_FinalBoneMatrices[index] = globalTransformation * offset;
-        }
+		glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        for (int i = 0; i < node->childrenCount; i++)
-            CalculateBoneTransform(&node->children[i], globalTransformation);
-    }
+		auto boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
+		if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+		{
+			int index = boneInfoMap[nodeName].id;
+			glm::mat4 offset = boneInfoMap[nodeName].offset;
+			m_FinalBoneMatrices[index] = globalTransformation * offset;
+		}
 
-    std::vector<glm::mat4> GetFinalBoneMatrices()
-    {
-        return m_FinalBoneMatrices;
-    }
+		for (int i = 0; i < node->childrenCount; i++)
+		{
+			CalculateBoneTransform(&node->children[i], globalTransformation);
+		}
+	}
+
+	std::vector<glm::mat4> GetFinalBoneMatrices()
+	{
+		return m_FinalBoneMatrices;
+	}
 
 private:
-    std::vector<glm::mat4> m_FinalBoneMatrices;
-    Animation m_CurrentAnimation;
-    float m_CurrentTime;
-    float m_DeltaTime;
+	std::vector<glm::mat4> m_FinalBoneMatrices;
+	Animation m_CurrentAnimation;
+	float m_CurrentTime;
+	bool looping = true;
+	bool finished = false;
 };
