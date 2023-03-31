@@ -22,6 +22,18 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{49a128c9-7e55-4108-940d-9a98fe213d41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rendering\animation">
+      <UniqueIdentifier>{960a719c-582b-48c5-a326-b92584b597db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering\animation">
+      <UniqueIdentifier>{b680cdac-b0f0-4ebd-93a9-4851c2c6ba0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gamelogic">
+      <UniqueIdentifier>{bb484c2d-529f-4481-8c27-60ebc4fde132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamelogic">
+      <UniqueIdentifier>{c3cb4bc7-6876-4621-b93d-e8ff90d44ddf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\texture.fs">
@@ -40,6 +52,9 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\simple.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\model_animated.vs">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
@@ -65,6 +80,21 @@
     <ClCompile Include="rendering\Camera.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="rendering\animation\Animation.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering\animation\Animator.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering\animation\Bone.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering\animation\AnimatedModel.cpp">
+      <Filter>Source Files\rendering\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\PlayerCharacter.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -81,6 +111,24 @@
     </ClInclude>
     <ClInclude Include="rendering\Camera.h">
       <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpGLMHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Animation.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Animator.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\Bone.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering\animation\AnimatedModel.h">
+      <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\PlayerCharacter.h">
+      <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

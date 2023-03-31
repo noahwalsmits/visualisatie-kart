@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include<fstream>
-#include<glad/glad.h>
 #include<iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 GLuint createShader(const std::string &shaderName, GLenum shaderType) {
 	//get shader source code as text
@@ -78,4 +78,9 @@ void Shader::setInt(const std::string& name, int value) {
 
 void Shader::setFloat(const std::string& name, float value) {
 	glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
+}
+
+void Shader::setMat4(const std::string& name, const glm::mat4 value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

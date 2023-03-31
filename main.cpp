@@ -5,25 +5,26 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include "stb_image.h"
+
 #include "rendering/Shader.h"
 #include "rendering/model.h"
+#include "rendering/animation/AnimatedModel.h"
 #include "rendering/Camera.h"
-#include "stb_image.h"
+#include "gamelogic/PlayerCharacter.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
 double lastTime;
 
-GLuint modelUniform;
-GLuint viewUniform;
-GLuint projectionUniform;
-
 Camera* camera;
 
-Model* eggCar; //TODO use references instead
-Model* driver;
-Model* cucumber;
-Shader* shader;
+Shader* staticShader;
+std::vector<Model> staticModels;
+Shader* animatedShader;
+std::vector<AnimatedModel> animatedModels;
+
 
 #ifdef _WIN32
 void GLAPIENTRY onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -52,17 +53,14 @@ void init()
 
 	camera = new Camera();
 
-	eggCar = new Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f));
-	driver = new Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f));
-	cucumber = new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f));
+	staticModels.push_back(Model("assets/egg1/egg1.obj"));
+	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
+	staticShader = new Shader("model.vs", "model.fs");
 
-	shader = new Shader("model.vs", "model.fs");
-	shader->use();
-
-	//create uniforms so we can set values to be used in the shader
-	modelUniform = glGetUniformLocation(shader->ID, "modelMatrix");
-	viewUniform = glGetUniformLocation(shader->ID, "viewMatrix");
-	projectionUniform = glGetUniformLocation(shader->ID, "projectionMatrix");
+	animatedModels.push_back(AnimatedModel("assets/animated_yoshi/yoshi.dae",
+		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }, 
+		glm::vec3(0.0f, 1.0f, 0.0f)));
+	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
 	{
@@ -82,18 +80,27 @@ void display()
 	glViewport(0, 0, screenSize.x, screenSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//projection
+	//prepare uniform data
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
-
-	//view
 	glm::mat4 view = camera->getView();
-	glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
 
-	//model uniform is set in model draw call
-	eggCar->draw(*shader, modelUniform);
-	driver->draw(*shader, modelUniform);
-	cucumber->draw(*shader, modelUniform);
+	//apply to static shader and draw static models
+	staticShader->use();
+	staticShader->setMat4("projectionMatrix", projection);
+	staticShader->setMat4("viewMatrix", view);
+	for (Model& model : staticModels)
+	{
+		model.draw(*staticShader);
+	}
+
+	//apply to animated shader and draw animated models
+	animatedShader->use();
+	animatedShader->setMat4("projectionMatrix", projection);
+	animatedShader->setMat4("viewMatrix", view);
+	for (AnimatedModel& model : animatedModels)
+	{
+		model.draw(*animatedShader);
+	}
 
 	glfwSwapBuffers(window);
 }
@@ -105,11 +112,20 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
+	for (AnimatedModel& model : animatedModels)
+	{
+		model.update(elapsed);
+	}
+
+	//process keyboard input
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
 	//moving the camera
 	float cameraSpeed = 3.0f * elapsed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		cameraSpeed *= 10.0f;
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera->position.z -= cameraSpeed;
 
@@ -147,7 +163,7 @@ int main(int argc, char* argv[])
 	glfwSwapInterval(1); // Enable vsync
 
 	init();
-	
+
 	while (true)
 	{
 		if (glfwWindowShouldClose(window))
@@ -162,9 +178,7 @@ int main(int argc, char* argv[])
 	glfwTerminate();
 
 	//clean up pointers
-	free(camera);
-	free(eggCar);
-	free(driver);
-	free(cucumber);
-	free(shader);
+	delete(camera);
+	delete(staticShader);
+	delete(animatedShader);
 }
