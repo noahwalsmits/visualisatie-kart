@@ -1,5 +1,4 @@
 #include "AnimatedModel.h"
-#include <iostream>
 
 void AnimatedModel::draw(Shader& shader)
 {
@@ -14,4 +13,9 @@ void AnimatedModel::draw(Shader& shader)
 void AnimatedModel::update(float deltaTime)
 {
 	this->animator.UpdateAnimation(deltaTime);
+}
+
+void AnimatedModel::playAnimation(int animationIndex)
+{
+	this->animator.PlayAnimation(this->animations[animationIndex]);
 }

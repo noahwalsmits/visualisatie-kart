@@ -9,6 +9,8 @@
 #include "../model.h"
 #include "bone.h"
 
+#include <iostream>
+
 struct AssimpNodeData
 {
     glm::mat4 transformation;
@@ -24,6 +26,7 @@ public:
 
     Animation(const std::string& animationPath, Model* model)
     {
+        std::cout << "loading animation: " << animationPath << std::endl;
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
         assert(scene && scene->mRootNode);

@@ -8,11 +8,10 @@
 class Animator
 {
 public:
-	Animator(Animation animation)
+	Animator()
 	{
 		m_CurrentTime = 0.0;
-		m_CurrentAnimation = animation;
-		//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
+		this->finished = true; //don't update because we start without an animation loaded
 
 		m_FinalBoneMatrices.reserve(100);
 
@@ -44,6 +43,7 @@ public:
 
 	void PlayAnimation(Animation pAnimation, bool loopAnimation = true)
 	{
+		//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
 		m_CurrentAnimation = pAnimation;
 		m_CurrentTime = 0.0f;
 		this->looping = loopAnimation;
@@ -89,5 +89,5 @@ private:
 	Animation m_CurrentAnimation;
 	float m_CurrentTime;
 	bool looping = true;
-	bool finished = false;
+	bool finished = true;
 };

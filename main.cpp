@@ -52,11 +52,11 @@ void init()
 	camera = new Camera();
 
 	staticModels.push_back(Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f)));
-	staticModels.push_back(Model("assets/Yoshi/player/P_YS.obj", glm::vec3(0.0f, 1.0f, 0.0f)));
 	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 
-	animatedModels.push_back(AnimatedModel("assets/vampire/dancing_vampire.dae", glm::vec3(0.0f, 0.0f, 0.0f)));
+	animatedModels.push_back(AnimatedModel("assets/animated_yoshi/yoshi.dae", glm::vec3(0.0f, 1.0f, 0.0f), 
+		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
