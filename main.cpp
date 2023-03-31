@@ -19,6 +19,7 @@ glm::ivec2 screenSize;
 double lastTime;
 
 Camera* camera;
+PlayerCharacter* playerCharacter;
 
 Shader* staticShader;
 std::vector<Model*> staticModels;
@@ -52,6 +53,8 @@ void init()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 	camera = new Camera();
+	playerCharacter = new PlayerCharacter();
+	animatedModels.push_back(&playerCharacter->getAnimatedModels());
 
 	staticModels.push_back(new Model("assets/egg1/egg1.obj"));
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
@@ -111,6 +114,8 @@ void update()
 	double time = glfwGetTime();
 	double elapsed = time - lastTime;
 	lastTime = time;
+
+	playerCharacter->update(elapsed, window);
 
 	for (AnimatedModel* model : animatedModels)
 	{
@@ -177,8 +182,6 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	//TODO clean up playercharacter
-
 	//clean up models
 	for (Model* model : staticModels)
 	{
@@ -191,6 +194,7 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	delete(camera);
+	//TODO delete(playerCharacter) without touching the already deleted models
 	delete(staticShader);
 	delete(animatedShader);
 }

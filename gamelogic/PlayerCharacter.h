@@ -1,5 +1,6 @@
 #pragma once
 #include "../rendering/animation/AnimatedModel.h"
+#include <GLFW/glfw3.h>
 
 class PlayerCharacter
 {
@@ -9,7 +10,8 @@ public:
 
 	}
 
-	void update(float deltaTime);
+	void update(float deltaTime, GLFWwindow* window);
+	AnimatedModel& getAnimatedModels() { return this->driverModel; };
 
 private:
 	//AnimatedModel carModel;
