@@ -21,9 +21,9 @@ double lastTime;
 Camera* camera;
 
 Shader* staticShader;
-std::vector<Model> staticModels;
+std::vector<Model*> staticModels;
 Shader* animatedShader;
-std::vector<AnimatedModel> animatedModels;
+std::vector<AnimatedModel*> animatedModels;
 
 
 #ifdef _WIN32
@@ -53,11 +53,11 @@ void init()
 
 	camera = new Camera();
 
-	staticModels.push_back(Model("assets/egg1/egg1.obj"));
-	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
+	staticModels.push_back(new Model("assets/egg1/egg1.obj"));
+	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 
-	animatedModels.push_back(AnimatedModel("assets/animated_yoshi/yoshi.dae",
+	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
 		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }, 
 		glm::vec3(0.0f, 1.0f, 0.0f)));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
@@ -88,18 +88,18 @@ void display()
 	staticShader->use();
 	staticShader->setMat4("projectionMatrix", projection);
 	staticShader->setMat4("viewMatrix", view);
-	for (Model& model : staticModels)
+	for (Model* model : staticModels)
 	{
-		model.draw(*staticShader);
+		model->draw(*staticShader);
 	}
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
 	animatedShader->setMat4("projectionMatrix", projection);
 	animatedShader->setMat4("viewMatrix", view);
-	for (AnimatedModel& model : animatedModels)
+	for (AnimatedModel* model : animatedModels)
 	{
-		model.draw(*animatedShader);
+		model->draw(*animatedShader);
 	}
 
 	glfwSwapBuffers(window);
@@ -112,9 +112,9 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
-	for (AnimatedModel& model : animatedModels)
+	for (AnimatedModel* model : animatedModels)
 	{
-		model.update(elapsed);
+		model->update(elapsed);
 	}
 
 	//process keyboard input
@@ -176,6 +176,18 @@ int main(int argc, char* argv[])
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	//TODO clean up playercharacter
+
+	//clean up models
+	for (Model* model : staticModels)
+	{
+		delete model;
+	}
+	for (AnimatedModel* model : animatedModels)
+	{
+		delete model;
+	}
 
 	//clean up pointers
 	delete(camera);
