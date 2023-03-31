@@ -6,11 +6,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "stb_image.h"
+
 #include "rendering/Shader.h"
 #include "rendering/model.h"
 #include "rendering/animation/AnimatedModel.h"
 #include "rendering/Camera.h"
-#include "stb_image.h"
+#include "gamelogic/PlayerCharacter.h"
 
 GLFWwindow* window;
 glm::ivec2 screenSize;
@@ -55,8 +57,9 @@ void init()
 	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 
-	animatedModels.push_back(AnimatedModel("assets/animated_yoshi/yoshi.dae", glm::vec3(0.0f, 1.0f, 0.0f), 
-		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }));
+	animatedModels.push_back(AnimatedModel("assets/animated_yoshi/yoshi.dae",
+		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }, 
+		glm::vec3(0.0f, 1.0f, 0.0f)));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
@@ -160,7 +163,7 @@ int main(int argc, char* argv[])
 	glfwSwapInterval(1); // Enable vsync
 
 	init();
-	
+
 	while (true)
 	{
 		if (glfwWindowShouldClose(window))

@@ -28,6 +28,12 @@
     <Filter Include="Source Files\rendering\animation">
       <UniqueIdentifier>{b680cdac-b0f0-4ebd-93a9-4851c2c6ba0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gamelogic">
+      <UniqueIdentifier>{bb484c2d-529f-4481-8c27-60ebc4fde132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamelogic">
+      <UniqueIdentifier>{c3cb4bc7-6876-4621-b93d-e8ff90d44ddf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\texture.fs">
@@ -86,6 +92,9 @@
     <ClCompile Include="rendering\animation\AnimatedModel.cpp">
       <Filter>Source Files\rendering\animation</Filter>
     </ClCompile>
+    <ClCompile Include="gamelogic\PlayerCharacter.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -117,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="rendering\animation\AnimatedModel.h">
       <Filter>Header Files\rendering\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\PlayerCharacter.h">
+      <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

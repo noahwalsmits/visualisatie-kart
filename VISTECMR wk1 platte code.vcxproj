@@ -28,6 +28,7 @@
     <None Include="shaders\texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gamelogic\PlayerCharacter.cpp" />
     <ClCompile Include="libs\glad\src\glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rendering\animation\AnimatedModel.cpp" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssimpGLMHelpers.h" />
+    <ClInclude Include="gamelogic\PlayerCharacter.h" />
     <ClInclude Include="rendering\animation\AnimatedModel.h" />
     <ClInclude Include="rendering\animation\Animation.h" />
     <ClInclude Include="rendering\animation\Animator.h" />
