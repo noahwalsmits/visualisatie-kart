@@ -51,7 +51,7 @@ void init()
 
 	camera = new Camera();
 
-	staticModels.push_back(Model("assets/egg1/egg1.obj", glm::vec3(0.0f, 0.0f, 0.0f)));
+	staticModels.push_back(Model("assets/egg1/egg1.obj"));
 	staticModels.push_back(Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 

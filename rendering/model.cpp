@@ -10,8 +10,15 @@
 
 void Model::draw(Shader &shader)
 {
-	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), this->position); //TODO store position and let it be changed at runtime
-	//modelMatrix = glm::rotate(modelMatrix, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f)); //TODO add options for rotation and scale
+	//move model
+	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), this->position);
+	//rotate model
+	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationPitch), glm::vec3(1.0f, 0.0f, 0.0f));
+	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationRoll), glm::vec3(0.0f, 0.0f, 1.0f));
+	//scale model
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(this->scale, this->scale, this->scale));
+	//update the model uniform
 	shader.setMat4("modelMatrix", modelMatrix);
 
 	//draw meshes
