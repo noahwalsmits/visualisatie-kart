@@ -11,12 +11,13 @@ public:
 	}
 
 	void update(float deltaTime, GLFWwindow* window);
-	AnimatedModel& getAnimatedModels() { return this->driverModel; };
+	void registerModels(std::vector<Model*> &staticModels, std::vector<AnimatedModel*> &animatedModels);
+	void unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 
 private:
-	//AnimatedModel carModel;
 	AnimatedModel driverModel = AnimatedModel("assets/animated_yoshi/yoshi.dae",
 		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" });
+	Model carModel = Model("assets/egg1/egg1.obj");
 
 	//speed that is added (per second) while going forwards
 	static constexpr float FORWARD_ACCELERATION = 0.1f;

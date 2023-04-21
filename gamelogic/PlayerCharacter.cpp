@@ -1,7 +1,32 @@
 #include "PlayerCharacter.h"
 #include <algorithm>
 
-//TODO change to use callbacks instead
+//TODO:
+//add car model
+//base animationstates
+//refactor code
+//have character update and draw it's own models?
+
+void PlayerCharacter::registerModels(std::vector<Model*> &staticModels, std::vector<AnimatedModel*> &animatedModels)
+{
+	staticModels.push_back(&this->carModel);
+	animatedModels.push_back(&this->driverModel);
+}
+
+void PlayerCharacter::unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
+{
+	auto carPosition = std::find(staticModels.begin(), staticModels.end(), &this->carModel);
+	if (carPosition != staticModels.end())
+	{
+		staticModels.erase(carPosition);
+	}
+	auto driverPosition = std::find(animatedModels.begin(), animatedModels.end(), &this->driverModel);
+	if (driverPosition != animatedModels.end())
+	{
+		animatedModels.erase(driverPosition);
+	}
+}
+
 void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 {
 	//driving
