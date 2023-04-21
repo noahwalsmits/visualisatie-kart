@@ -2,12 +2,11 @@
 #include <algorithm>
 
 //TODO:
-//add car model
 //base animationstates
 //refactor code
 //have character update and draw it's own models?
 
-void PlayerCharacter::registerModels(std::vector<Model*> &staticModels, std::vector<AnimatedModel*> &animatedModels)
+void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
 	staticModels.push_back(&this->carModel);
 	animatedModels.push_back(&this->driverModel);
@@ -91,6 +90,11 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	//update model position
 	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
 	this->driverModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
-	this->driverModel.rotationYaw = this->rotation; //make models use rotation as reference
-	//TODO displace all models from a single shared position in PlayerCharacter.draw()
+	this->driverModel.rotationYaw = this->rotation;
+
+	this->carModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
+	this->carModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
+	this->carModel.rotationYaw = this->rotation;
+	//TODO make models use rotation as reference
+	//TODO displace all models from a single shared position
 }

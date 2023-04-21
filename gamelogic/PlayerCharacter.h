@@ -7,11 +7,11 @@ class PlayerCharacter
 public:
 	PlayerCharacter()
 	{
-
+		this->driverModel.offset = glm::vec3(0.0f, 0.35f, -0.2f);
 	}
 
 	void update(float deltaTime, GLFWwindow* window);
-	void registerModels(std::vector<Model*> &staticModels, std::vector<AnimatedModel*> &animatedModels);
+	void registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 	void unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 
 private:

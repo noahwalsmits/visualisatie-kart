@@ -16,6 +16,8 @@ void Model::draw(Shader &shader)
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationYaw), glm::vec3(0.0f, 1.0f, 0.0f));
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationPitch), glm::vec3(1.0f, 0.0f, 0.0f));
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(this->rotationRoll), glm::vec3(0.0f, 0.0f, 1.0f));
+	//offest model
+	modelMatrix = glm::translate(modelMatrix, this->offset);
 	//scale model
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(this->scale, this->scale, this->scale));
 	//update the model uniform
