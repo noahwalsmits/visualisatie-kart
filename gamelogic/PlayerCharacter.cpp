@@ -48,13 +48,24 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	//steering
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
 	{
-		//this->driverModel.position.x -= speed;
+		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
+		{
+			this->rotation += std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
+			this->rotation = remainderf(this->rotation, 360.0f);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
 	{
-		//this->driverModel.position.x += speed;
+		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
+		{
+			this->rotation -= std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
+			this->rotation = remainderf(this->rotation, 360.0f);
+		}
 	}
 
-	//apply speed
-	this->driverModel.position.x += this->speed; //TODO change to z position after adding steering
+	//update model position
+	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
+	this->driverModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
+	this->driverModel.rotationYaw = this->rotation; //make models use rotation as reference
+	//TODO displace all models from a single shared position in PlayerCharacter.draw()
 }
