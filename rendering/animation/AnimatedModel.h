@@ -9,8 +9,8 @@
 class AnimatedModel : public Model
 {
 public:
-	template <class T> //TODO value key template to add models to a map
-	AnimatedModel(std::string const& modelPath, std::initializer_list<T> animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
+	//TODO value key template to add models to a map
+	AnimatedModel(std::string const& modelPath, std::initializer_list<std::string> animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
 		: Model(modelPath, startPosition)
 	{
 		//all animations must be exported as seperate .dae files because Blender :(
