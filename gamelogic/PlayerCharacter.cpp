@@ -4,7 +4,6 @@
 //TODO:
 //base animationstates
 //refactor code
-//have character update and draw it's own models?
 
 void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
@@ -87,7 +86,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 		}
 	}
 
-	//update model position
+	//update models
 	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
 	this->driverModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
 	this->driverModel.rotationYaw = this->rotation;

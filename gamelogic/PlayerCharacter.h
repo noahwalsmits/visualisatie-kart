@@ -32,7 +32,7 @@ private:
 	//speed change (per second) towards 0 while not going forward or reversing
 	static constexpr float IDLE_DECCELERATION = 0.2f;
 
-	//the turning rate while the speed is between -1 and 1 (degrees per second)
+	//the turning rate (degrees per second) while the speed is between -1 and 1
 	//the applied turning decreases as the speed goes up
 	static constexpr float TURNING_RATE = 100.0f;
 
