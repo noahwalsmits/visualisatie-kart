@@ -15,7 +15,7 @@ void AnimatedModel::update(float deltaTime)
 	this->animator.UpdateAnimation(deltaTime);
 }
 
-void AnimatedModel::playAnimation(int animationIndex, bool loopAnimation)
+void AnimatedModel::playAnimation(int animationKey, bool loopAnimation)
 {
-	this->animator.PlayAnimation(this->animations[animationIndex], loopAnimation);
+	this->animator.PlayAnimation(this->animations[animationKey], loopAnimation);
 }

@@ -60,7 +60,10 @@ void init()
 	staticShader = new Shader("model.vs", "model.fs");
 
 	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
-		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }, 
+		{ 
+			{0, "assets/animated_yoshi/yoshiLeft.dae"},
+			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
+		},
 		glm::vec3(0.0f, 1.0f, 0.0f)));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 

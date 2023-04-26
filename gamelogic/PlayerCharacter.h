@@ -15,12 +15,16 @@ public:
 	void unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 
 private:
-	//animation state values match with animation index on the driver model
-	enum class DriverAnimationState { steerLeft = 1, steerNeutral = 0, steerRight = 2 };
+	//animation state values match with animation key on the driver model
+	enum class DriverAnimationState { steerLeft, steerNeutral, steerRight };
 	DriverAnimationState currentDriverAnimation = DriverAnimationState::steerNeutral;
 
 	AnimatedModel driverModel = AnimatedModel("assets/animated_yoshi/yoshi.dae",
-		{ "assets/animated_yoshi/yoshiNeutral.dae", "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" });
+		{ 
+			{ (int)DriverAnimationState::steerNeutral, "assets/animated_yoshi/yoshiNeutral.dae"}, 
+			{ (int)DriverAnimationState::steerLeft, "assets/animated_yoshi/yoshiLeft.dae" },
+			{ (int)DriverAnimationState::steerRight, "assets/animated_yoshi/yoshiRight.dae" }
+		});
 	Model carModel = Model("assets/egg1/egg1.obj");
 
 	//speed that is added (per second) while going forwards
