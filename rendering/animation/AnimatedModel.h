@@ -9,7 +9,7 @@
 class AnimatedModel : public Model
 {
 public:
-	template <class T>
+	template <class T> //TODO value key template to add models to a map
 	AnimatedModel(std::string const& modelPath, std::initializer_list<T> animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
 		: Model(modelPath, startPosition)
 	{
@@ -23,7 +23,7 @@ public:
 
 	void draw(Shader& shader);
 	void update(float deltaTime);
-	void playAnimation(int animationIndex);
+	void playAnimation(int animationIndex, bool loopAnimation = true);
 
 private:
 	Animator animator;
