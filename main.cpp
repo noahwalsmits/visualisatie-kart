@@ -54,14 +54,16 @@ void init()
 
 	camera = new Camera();
 	playerCharacter = new PlayerCharacter();
-	animatedModels.push_back(&playerCharacter->getAnimatedModels());
+	playerCharacter->registerModels(staticModels, animatedModels);
 
-	staticModels.push_back(new Model("assets/egg1/egg1.obj"));
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
 
 	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
-		{ "assets/animated_yoshi/yoshiLeft.dae", "assets/animated_yoshi/yoshiRight.dae" }, 
+		{ 
+			{0, "assets/animated_yoshi/yoshiLeft.dae"},
+			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
+		},
 		glm::vec3(0.0f, 1.0f, 0.0f)));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
@@ -182,6 +184,8 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
+	playerCharacter->unregisterModels(staticModels, animatedModels);
+
 	//clean up models
 	for (Model* model : staticModels)
 	{
@@ -194,7 +198,7 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	delete(camera);
-	//TODO delete(playerCharacter) without touching the already deleted models
+	delete(playerCharacter);
 	delete(staticShader);
 	delete(animatedShader);
 }

@@ -16,6 +16,7 @@ public:
 	float rotationYaw = 0.0f; //z-axis rotation in degrees
 	float rotationPitch = 0.0f; //y-axis rotation in degrees
 	float rotationRoll = 0.0f; //x-axis rotation in degrees
+	glm::vec3 offset; //offset to position applied after the rotation
 	float scale = 1.0f; //size multplier of the model
 
 	/*Loads a 3D model using ASSIMP*/
@@ -23,6 +24,7 @@ public:
 	{
 		this->loadModel(path);
 		this->position = startPosition;
+		this->offset = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 	virtual void draw(Shader &shader);
 

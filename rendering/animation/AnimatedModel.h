@@ -1,6 +1,7 @@
 #pragma once
 #include "../model.h"
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
 #include "Animator.h"
 #include "Animation.h"
@@ -9,23 +10,22 @@
 class AnimatedModel : public Model
 {
 public:
-	template <class T>
-	AnimatedModel(std::string const& modelPath, std::initializer_list<T> animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
+	AnimatedModel(std::string const& modelPath, const std::map<int, std::string>& animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
 		: Model(modelPath, startPosition)
 	{
 		//all animations must be exported as seperate .dae files because Blender :(
-		for (std::string const& animationPath : animationPaths)
+		for (const auto& entry : animationPaths)
 		{
-			this->animations.push_back(Animation(animationPath, this));
+			this->animations[entry.first] = Animation(entry.second, this);
 		}
-		this->animator.PlayAnimation(this->animations[0]);
+		//this->animator.PlayAnimation(this->animations[0]); //TODO fix them not playing their first animation
 	}
 
 	void draw(Shader& shader);
 	void update(float deltaTime);
-	void playAnimation(int animationIndex);
+	void playAnimation(int animationKey, bool loopAnimation = true);
 
 private:
 	Animator animator;
-	std::vector<Animation> animations;
+	std::map<int, Animation> animations; //TODO allow the key to be a generic type
 };
