@@ -17,6 +17,8 @@
 GLFWwindow* window;
 glm::ivec2 screenSize;
 double lastTime;
+double lastMouseX;
+double lastMouseY;
 
 Camera* camera;
 PlayerCharacter* playerCharacter;
@@ -38,6 +40,13 @@ void onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei len
 static void glfw_error_callback(int error, const char* description)
 {
 	std::cerr << "Glfw Error" << error << " -> " << description << std::endl;
+}
+
+void mouseMoved(GLFWwindow* window, double mouseX, double mouseY)
+{
+	camera->mouseMoved(mouseX - lastMouseX, mouseY - lastMouseY);
+	lastMouseX = mouseX;
+	lastMouseY = mouseY;
 }
 
 
@@ -74,6 +83,13 @@ void init()
 	}
 
 	lastTime = glfwGetTime();
+
+	//setup mouse movement
+	glfwGetWindowSize(window, &screenSize.x, &screenSize.y);
+	lastMouseX = screenSize.x / 2;
+	lastMouseY = screenSize.y / 2;
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouseMoved);
 
 	std::cout << "completed init" << std::endl;
 }
