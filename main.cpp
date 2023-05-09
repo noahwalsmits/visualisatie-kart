@@ -42,7 +42,7 @@ static void glfw_error_callback(int error, const char* description)
 	std::cerr << "Glfw Error" << error << " -> " << description << std::endl;
 }
 
-void mouseMoved(GLFWwindow* window, double mouseX, double mouseY)
+void mouseMovedCallback(GLFWwindow* window, double mouseX, double mouseY)
 {
 	camera->mouseMoved(mouseX - lastMouseX, mouseY - lastMouseY);
 	lastMouseX = mouseX;
@@ -89,7 +89,7 @@ void init()
 	lastMouseX = screenSize.x / 2;
 	lastMouseY = screenSize.y / 2;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window, mouseMoved);
+	glfwSetCursorPosCallback(window, mouseMovedCallback);
 
 	std::cout << "completed init" << std::endl;
 }
@@ -103,7 +103,7 @@ void display()
 
 	//prepare uniform data
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	glm::mat4 view = camera->getView();
+	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
 	staticShader->use();
