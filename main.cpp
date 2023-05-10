@@ -42,13 +42,6 @@ static void glfw_error_callback(int error, const char* description)
 	std::cerr << "Glfw Error" << error << " -> " << description << std::endl;
 }
 
-void mouseMovedCallback(GLFWwindow* window, double mouseX, double mouseY)
-{
-	camera->mouseMoved(mouseX - lastMouseX, mouseY - lastMouseY);
-	lastMouseX = mouseX;
-	lastMouseY = mouseY;
-}
-
 
 void init()
 {
@@ -89,7 +82,6 @@ void init()
 	lastMouseX = screenSize.x / 2;
 	lastMouseY = screenSize.y / 2;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window, mouseMovedCallback);
 
 	std::cout << "completed init" << std::endl;
 }
@@ -166,6 +158,13 @@ void update()
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		camera->position.y += cameraSpeed;
+
+	//poll mouse position
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+	camera->mouseMoved(mouseX - lastMouseX, mouseY - lastMouseY);
+	lastMouseX = mouseX;
+	lastMouseY = mouseY;
 }
 
 
