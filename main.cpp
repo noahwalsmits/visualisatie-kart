@@ -134,30 +134,10 @@ void update()
 
 	//process keyboard input
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
 		glfwSetWindowShouldClose(window, true);
-
-	//moving the camera
-	float cameraSpeed = 3.0f * elapsed;
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		cameraSpeed *= 10.0f;
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera->position.z -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera->position.z += cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->position.x -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->position.x += cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		camera->position.y -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera->position.y += cameraSpeed;
+	}
+	camera->pollMovementKeys(elapsed, window);
 
 	//poll mouse position
 	double mouseX, mouseY;
