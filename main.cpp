@@ -17,6 +17,8 @@
 GLFWwindow* window;
 glm::ivec2 screenSize;
 double lastTime;
+double lastMouseX;
+double lastMouseY;
 
 Camera* camera;
 PlayerCharacter* playerCharacter;
@@ -52,9 +54,9 @@ void init()
 	glEnable(GL_BLEND);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-	camera = new Camera();
 	playerCharacter = new PlayerCharacter();
 	playerCharacter->registerModels(staticModels, animatedModels);
+	camera = new Camera(playerCharacter->position);
 
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
@@ -75,6 +77,12 @@ void init()
 
 	lastTime = glfwGetTime();
 
+	//setup mouse movement
+	glfwGetWindowSize(window, &screenSize.x, &screenSize.y);
+	lastMouseX = screenSize.x / 2;
+	lastMouseY = screenSize.y / 2;
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	std::cout << "completed init" << std::endl;
 }
 
@@ -87,7 +95,7 @@ void display()
 
 	//prepare uniform data
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-	glm::mat4 view = camera->getView();
+	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
 	staticShader->use();
@@ -126,30 +134,17 @@ void update()
 
 	//process keyboard input
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
 		glfwSetWindowShouldClose(window, true);
+	}
+	camera->pollMovementKeys(elapsed, window);
 
-	//moving the camera
-	float cameraSpeed = 3.0f * elapsed;
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		cameraSpeed *= 10.0f;
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera->position.z -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera->position.z += cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->position.x -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->position.x += cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		camera->position.y -= cameraSpeed;
-
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera->position.y += cameraSpeed;
+	//poll mouse position
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+	camera->mouseMoved(mouseX - lastMouseX, mouseY - lastMouseY);
+	lastMouseX = mouseX;
+	lastMouseY = mouseY;
 }
 
 
