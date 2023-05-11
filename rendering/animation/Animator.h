@@ -8,6 +8,8 @@
 class Animator
 {
 public:
+	float speed = 1.0f; //speed multiplier applied to the animation, negative values will cause it to play in reverse
+
 	Animator()
 	{
 		m_CurrentTime = 0.0;
@@ -28,26 +30,40 @@ public:
 			return;
 		}
 
-		m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
-		if (this->looping)
+		m_CurrentTime += this->speed * m_CurrentAnimation.GetTicksPerSecond() * dt;
+		if (this->looping) //restart animation
 		{
 			m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+			if (m_CurrentTime < 0)
+			{
+				m_CurrentTime = m_CurrentAnimation.GetDuration() + m_CurrentTime;
+			}
 		}
-		else if (m_CurrentTime >= m_CurrentAnimation.GetDuration())
+		else if (m_CurrentTime >= m_CurrentAnimation.GetDuration()) //end animation
 		{
 			this->finished = true;
 			m_CurrentTime = std::nextafter(m_CurrentAnimation.GetDuration(), 0.0f); //set it to a value just under the duration
 		}
+		else if (m_CurrentTime < 0.0f) //end reverse animation
+		{
+			this->finished = true;
+			m_CurrentTime = 0.0f;
+		}
 		CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
 	}
 
-	void PlayAnimation(Animation pAnimation, bool loopAnimation = true)
+	void PlayAnimation(Animation pAnimation, bool loopAnimation = true, float animationSpeed = 1.0f)
 	{
 		//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
 		m_CurrentAnimation = pAnimation;
 		m_CurrentTime = 0.0f;
+		this->speed = animationSpeed;
 		this->looping = loopAnimation;
 		this->finished = false;
+		if (this->speed < 0) //reverse animations start at the end and count down from there
+		{
+			m_CurrentTime = std::nextafter(m_CurrentAnimation.GetDuration(), 0.0f); //set it to a value just under the duration
+		}
 	}
 
 	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)

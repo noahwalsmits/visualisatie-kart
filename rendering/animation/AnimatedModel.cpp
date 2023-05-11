@@ -37,3 +37,8 @@ void AnimatedModel::playAnimation(int animationKey, bool loopAnimation)
 	assert(this->animations.count(animationKey) == 1);
 	this->animator.PlayAnimation(this->animations[animationKey], loopAnimation);
 }
+
+void AnimatedModel::setAnimationSpeed(float speed)
+{
+	this->animator.speed = speed;
+}

@@ -20,6 +20,7 @@ public:
 	void draw(Shader& shader);
 	void update(float deltaTime);
 	void playAnimation(int animationKey, bool loopAnimation = true);
+	void setAnimationSpeed(float speed);
 
 private:
 	Animator animator;
