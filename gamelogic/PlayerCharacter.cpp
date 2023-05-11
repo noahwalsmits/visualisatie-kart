@@ -114,6 +114,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	this->carModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
 	this->carModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
 	this->carModel.rotationYaw = this->rotation;
+	this->carModel.setAnimationSpeed(this->speed * 20.0f);
 	//TODO make models use rotation as reference
 	//TODO displace all models from a single shared position
 
