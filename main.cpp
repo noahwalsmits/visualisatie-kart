@@ -66,7 +66,7 @@ void init()
 			{0, "assets/animated_yoshi/yoshiLeft.dae"},
 			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
 		},
-		glm::vec3(0.0f, 1.0f, 0.0f)));
+		glm::vec3(0.0f, 1.0f, 0.0f), 0));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
