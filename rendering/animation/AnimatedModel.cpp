@@ -17,5 +17,6 @@ void AnimatedModel::update(float deltaTime)
 
 void AnimatedModel::playAnimation(int animationKey, bool loopAnimation)
 {
+	assert(this->animations.count(animationKey) == 1);
 	this->animator.PlayAnimation(this->animations[animationKey], loopAnimation);
 }

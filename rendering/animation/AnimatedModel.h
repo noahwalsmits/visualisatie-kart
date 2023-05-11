@@ -10,7 +10,7 @@
 class AnimatedModel : public Model
 {
 public:
-	AnimatedModel(std::string const& modelPath, const std::map<int, std::string>& animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
+	AnimatedModel(std::string const& modelPath, const std::map<int, std::string>& animationPaths, glm::vec3 startPosition, int startAnimation = 0)
 		: Model(modelPath, startPosition)
 	{
 		//all animations must be exported as seperate .dae files because Blender :(
@@ -18,7 +18,7 @@ public:
 		{
 			this->animations[entry.first] = Animation(entry.second, this);
 		}
-		//this->animator.PlayAnimation(this->animations[0]); //TODO fix them not playing their first animation
+		this->playAnimation(startAnimation);
 	}
 
 	void draw(Shader& shader);

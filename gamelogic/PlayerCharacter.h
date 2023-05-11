@@ -27,11 +27,12 @@ private:
 			{ (int)DriverAnimationState::steerNeutral, "assets/animated_yoshi/yoshiNeutral.dae"}, 
 			{ (int)DriverAnimationState::steerLeft, "assets/animated_yoshi/yoshiLeft.dae" },
 			{ (int)DriverAnimationState::steerRight, "assets/animated_yoshi/yoshiRight.dae" }
-		});
+		}, this->position, (int)DriverAnimationState::steerNeutral);
+
 	AnimatedModel carModel = AnimatedModel("assets/animated_egg1/egg1.dae",
 		{ 
 			{0, "assets/animated_egg1/egg1.dae"}
-		});
+		}, this->position);
 
 	//speed that is added (per second) while going forwards
 	static constexpr float FORWARD_ACCELERATION = 0.1f;
