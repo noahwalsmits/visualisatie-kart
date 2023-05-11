@@ -10,6 +10,7 @@ public:
 	PlayerCharacter()
 	{
 		this->driverModel.offset = glm::vec3(0.0f, 0.35f, -0.2f);
+		this->carModel.playAnimation(0);
 	}
 
 	void update(float deltaTime, GLFWwindow* window);
@@ -27,7 +28,10 @@ private:
 			{ (int)DriverAnimationState::steerLeft, "assets/animated_yoshi/yoshiLeft.dae" },
 			{ (int)DriverAnimationState::steerRight, "assets/animated_yoshi/yoshiRight.dae" }
 		});
-	Model carModel = Model("assets/egg1/egg1.obj");
+	AnimatedModel carModel = AnimatedModel("assets/animated_egg1/egg1.dae",
+		{ 
+			{0, "assets/animated_egg1/egg1.dae"}
+		});
 
 	//speed that is added (per second) while going forwards
 	static constexpr float FORWARD_ACCELERATION = 0.1f;

@@ -7,16 +7,16 @@
 
 void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
-	staticModels.push_back(&this->carModel);
+	animatedModels.push_back(&this->carModel);
 	animatedModels.push_back(&this->driverModel);
 }
 
 void PlayerCharacter::unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
-	auto carPosition = std::find(staticModels.begin(), staticModels.end(), &this->carModel);
-	if (carPosition != staticModels.end())
+	auto carPosition = std::find(animatedModels.begin(), animatedModels.end(), &this->carModel);
+	if (carPosition != animatedModels.end())
 	{
-		staticModels.erase(carPosition);
+		animatedModels.erase(carPosition);
 	}
 	auto driverPosition = std::find(animatedModels.begin(), animatedModels.end(), &this->driverModel);
 	if (driverPosition != animatedModels.end())
