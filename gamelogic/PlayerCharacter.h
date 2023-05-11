@@ -5,6 +5,8 @@
 class PlayerCharacter
 {
 public:
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	PlayerCharacter()
 	{
 		this->driverModel.offset = glm::vec3(0.0f, 0.35f, -0.2f);

@@ -54,9 +54,9 @@ void init()
 	glEnable(GL_BLEND);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-	camera = new Camera();
 	playerCharacter = new PlayerCharacter();
 	playerCharacter->registerModels(staticModels, animatedModels);
+	camera = new Camera(playerCharacter->position);
 
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");

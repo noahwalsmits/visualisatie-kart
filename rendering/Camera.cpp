@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera()
+Camera::Camera(glm::vec3& targetPosition) : target(targetPosition)
 {
 	updateViewingAngle();
 }
