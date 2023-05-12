@@ -5,8 +5,6 @@
 class PlayerCharacter
 {
 public:
-	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
-
 	PlayerCharacter()
 	{
 		this->driverModel.offset = glm::vec3(0.0f, 0.35f, -0.2f);
@@ -16,6 +14,8 @@ public:
 	void update(float deltaTime, GLFWwindow* window);
 	void registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 	void unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
+	glm::vec3& getCharacterPosition() { return this->characterPosition; }
+	glm::vec3& getCameraTarget() { return this->cameraTarget; }
 
 private:
 	//animation state values match with animation key on the driver model
@@ -27,9 +27,9 @@ private:
 			{ (int)DriverAnimationState::steerNeutral, "assets/animated_yoshi/yoshiNeutral.dae"}, 
 			{ (int)DriverAnimationState::steerLeft, "assets/animated_yoshi/yoshiLeft.dae" },
 			{ (int)DriverAnimationState::steerRight, "assets/animated_yoshi/yoshiRight.dae" }
-		}, this->position, (int)DriverAnimationState::steerNeutral);
+		}, this->characterPosition, (int)DriverAnimationState::steerNeutral);
 
-	AnimatedModel carModel = AnimatedModel("assets/animated_egg1/egg1.dae", this->position);
+	AnimatedModel carModel = AnimatedModel("assets/animated_egg1/egg1.dae", this->characterPosition);
 
 	//speed that is added (per second) while going forwards
 	static constexpr float FORWARD_ACCELERATION = 0.1f;
@@ -43,7 +43,6 @@ private:
 	static constexpr float BRAKING_DECCELERATION = 0.3f;
 	//speed change (per second) towards 0 while not going forward or reversing
 	static constexpr float IDLE_DECCELERATION = 0.2f;
-
 	//the turning rate (degrees per second) while the speed is between -1 and 1
 	//the applied turning decreases as the speed goes up
 	static constexpr float TURNING_RATE = 100.0f;
@@ -52,5 +51,11 @@ private:
 	float speed = 0.0f;
 	//the current direction in degrees
 	float rotation = 0.0f;
+	//the current position of the character
+	glm::vec3 characterPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	//the offset between the character position and the camera target position
+	glm::vec3 cameraTargetOffset = glm::vec3(0.0f, 0.35f, 0.0f);
+	//the position the camera following the character should be targeting
+	glm::vec3 cameraTarget = this->characterPosition + this->cameraTargetOffset;
 };
 

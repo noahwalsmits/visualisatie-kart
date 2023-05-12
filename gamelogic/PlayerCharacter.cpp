@@ -1,9 +1,6 @@
 #include "PlayerCharacter.h"
 #include <algorithm>
 
-//TODO:
-//refactor code
-
 void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
 	animatedModels.push_back(&this->carModel);
@@ -103,19 +100,15 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 		}
 	}
 
-	//update models
-	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->driverModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
-	this->driverModel.rotationYaw = this->rotation;
+	//update position
+	this->characterPosition.z += cos(glm::radians(this->rotation)) * this->speed;
+	this->characterPosition.x += sin(glm::radians(this->rotation)) * this->speed;
+	cameraTarget = this->characterPosition + this->cameraTargetOffset;
 
-	this->carModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->carModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
+	//update models
+	this->driverModel.position = this->characterPosition;
+	this->driverModel.rotationYaw = this->rotation;
+	this->carModel.position = this->characterPosition;
 	this->carModel.rotationYaw = this->rotation;
 	this->carModel.setAnimationSpeed(this->speed * 20.0f);
-	//TODO make models use rotation as reference
-	//TODO displace all models from a single shared position
-
-	//TODO make better use of the character position
-	this->position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->position.x += sin(glm::radians(this->rotation)) * this->speed;
 }
