@@ -14,7 +14,7 @@ uniform mat4 projectionMatrix;
 void main()
 {
     TexCoords = aTexCoords;
-    Normal = aNormal;
+    Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
     FragPosition = vec3(modelMatrix * vec4(aPos, 1.0));
 }
