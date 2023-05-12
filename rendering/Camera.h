@@ -11,6 +11,11 @@ public:
 	void mouseMoved(double deltaX, double deltaY);
 	void pollMovementKeys(float deltaTime, GLFWwindow* window);
 
+	float getYaw() { return this->yaw; }
+	void setYaw(float yaw) { this->yaw = yaw; }
+	float getPitch() { return this->pitch; }
+	void setPitch(float pitch) { this->pitch = pitch; }
+
 private:
 	static constexpr float MOVEMENT_SPEED = 3.0f;
 	static constexpr float MOUSE_SENSITIVITY = 0.1f;

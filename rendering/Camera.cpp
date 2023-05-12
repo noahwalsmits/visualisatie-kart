@@ -15,6 +15,7 @@ void Camera::mouseMoved(double deltaX, double deltaY)
 {
 	this->yaw -= deltaX * this->MOUSE_SENSITIVITY;
 	this->yaw = remainderf(this->yaw, 360.0f);
+
 	this->pitch -= deltaY * this->MOUSE_SENSITIVITY;
 	if (pitch > 89.0f)
 	{
@@ -24,6 +25,7 @@ void Camera::mouseMoved(double deltaX, double deltaY)
 	{
 		pitch = -89.0f;
 	}
+
 	this->updateViewingAngle();
 }
 

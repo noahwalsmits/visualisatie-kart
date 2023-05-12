@@ -10,20 +10,17 @@
 class AnimatedModel : public Model
 {
 public:
-	AnimatedModel(std::string const& modelPath, const std::map<int, std::string>& animationPaths, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
-		: Model(modelPath, startPosition)
-	{
-		//all animations must be exported as seperate .dae files because Blender :(
-		for (const auto& entry : animationPaths)
-		{
-			this->animations[entry.first] = Animation(entry.second, this);
-		}
-		//this->animator.PlayAnimation(this->animations[0]); //TODO fix them not playing their first animation
-	}
+	/*Creates a model with a map of integers corresponding to animation filepaths.
+	These integers can then be used to play their corresponding animations.*/
+	AnimatedModel(std::string const& modelPath, const std::map<int, std::string>& animationPaths, glm::vec3 startPosition, int startAnimation);
+
+	/*Creates a model with a single animation.*/
+	AnimatedModel(std::string const& modelPath, glm::vec3 startPosition);
 
 	void draw(Shader& shader);
 	void update(float deltaTime);
 	void playAnimation(int animationKey, bool loopAnimation = true);
+	void setAnimationSpeed(float speed);
 
 private:
 	Animator animator;

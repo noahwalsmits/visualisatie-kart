@@ -1,22 +1,18 @@
 #include "PlayerCharacter.h"
 #include <algorithm>
 
-//TODO:
-//base animationstates
-//refactor code
-
 void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
-	staticModels.push_back(&this->carModel);
+	animatedModels.push_back(&this->carModel);
 	animatedModels.push_back(&this->driverModel);
 }
 
 void PlayerCharacter::unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
 {
-	auto carPosition = std::find(staticModels.begin(), staticModels.end(), &this->carModel);
-	if (carPosition != staticModels.end())
+	auto carPosition = std::find(animatedModels.begin(), animatedModels.end(), &this->carModel);
+	if (carPosition != animatedModels.end())
 	{
-		staticModels.erase(carPosition);
+		animatedModels.erase(carPosition);
 	}
 	auto driverPosition = std::find(animatedModels.begin(), animatedModels.end(), &this->driverModel);
 	if (driverPosition != animatedModels.end())
@@ -28,7 +24,7 @@ void PlayerCharacter::unregisterModels(std::vector<Model*>& staticModels, std::v
 void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 {
 	//driving
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forwards
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) //forwards
 	{
 		if (this->speed < 0.0f) //brake
 		{
@@ -41,7 +37,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->speed = std::min(this->speed, MAX_FORWARD_SPEED);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //backwards
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) //backwards
 	{
 		if (this->speed > 0.0f) //brake
 		{
@@ -54,7 +50,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->speed = std::max(this->speed, MAX_REVERSE_SPEED);
 		}
 	}
-	if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE)) //idle
+	if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE)) //idle
 	{
 		if (this->speed > 0.0f) //slow to a stop
 		{
@@ -69,55 +65,47 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	}
 
 	//steering
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) //left
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerLeft)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerLeft;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, false);
-		}
+		this->useAnimationState(DriverAnimationState::steerLeft, false);
 		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
 		{
 			this->rotation += std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
 			this->rotation = remainderf(this->rotation, 360.0f);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) //right
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerRight)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerRight;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, false);
-		}
+		this->useAnimationState(DriverAnimationState::steerRight, false);
 		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
 		{
 			this->rotation -= std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
 			this->rotation = remainderf(this->rotation, 360.0f);
 		}
 	}
-	if ((glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE)) //idle
+	if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)) //idle
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerNeutral)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerNeutral;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, true);
-		}
+		this->useAnimationState(DriverAnimationState::steerNeutral, true);
 	}
 
-	//TODO change current animation based on speed
+	//update position
+	this->characterPosition.z += cos(glm::radians(this->rotation)) * this->speed;
+	this->characterPosition.x += sin(glm::radians(this->rotation)) * this->speed;
+	cameraTarget = this->characterPosition + this->cameraTargetOffset;
 
 	//update models
-	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->driverModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
+	this->driverModel.position = this->characterPosition;
 	this->driverModel.rotationYaw = this->rotation;
-
-	this->carModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->carModel.position.x += sin(glm::radians(this->rotation)) * this->speed;
+	this->carModel.position = this->characterPosition;
 	this->carModel.rotationYaw = this->rotation;
-	//TODO make models use rotation as reference
-	//TODO displace all models from a single shared position
+	this->carModel.setAnimationSpeed(this->speed * 20.0f);
+}
 
-	//TODO make better use of the character position
-	this->position.z += cos(glm::radians(this->rotation)) * this->speed;
-	this->position.x += sin(glm::radians(this->rotation)) * this->speed;
+void PlayerCharacter::useAnimationState(DriverAnimationState animationState, bool loopAnimation)
+{
+	if (this->currentDriverAnimation != animationState)
+	{
+		this->currentDriverAnimation = animationState;
+		this->driverModel.playAnimation((int)this->currentDriverAnimation, loopAnimation);
+	}
 }

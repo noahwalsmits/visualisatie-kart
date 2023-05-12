@@ -56,7 +56,7 @@ void init()
 
 	playerCharacter = new PlayerCharacter();
 	playerCharacter->registerModels(staticModels, animatedModels);
-	camera = new Camera(playerCharacter->position);
+	camera = new Camera(playerCharacter->getCameraTarget());
 
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
@@ -66,7 +66,7 @@ void init()
 			{0, "assets/animated_yoshi/yoshiLeft.dae"},
 			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
 		},
-		glm::vec3(0.0f, 1.0f, 0.0f)));
+		glm::vec3(0.0f, 1.0f, 0.0f), 0));
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
@@ -125,8 +125,13 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
+	//update player
+	//camera tracks player rotation while still allowing mouse adjustment
+	float oldCharacterRotation = playerCharacter->getRotation();
 	playerCharacter->update(elapsed, window);
+	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldCharacterRotation));
 
+	//update animations
 	for (AnimatedModel* model : animatedModels)
 	{
 		model->update(elapsed);
