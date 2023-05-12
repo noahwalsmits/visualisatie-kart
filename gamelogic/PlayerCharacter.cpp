@@ -2,7 +2,6 @@
 #include <algorithm>
 
 //TODO:
-//base animationstates
 //refactor code
 
 void PlayerCharacter::registerModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels)
@@ -28,7 +27,7 @@ void PlayerCharacter::unregisterModels(std::vector<Model*>& staticModels, std::v
 void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 {
 	//driving
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forwards
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) //forwards
 	{
 		if (this->speed < 0.0f) //brake
 		{
@@ -41,7 +40,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->speed = std::min(this->speed, MAX_FORWARD_SPEED);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //backwards
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) //backwards
 	{
 		if (this->speed > 0.0f) //brake
 		{
@@ -54,7 +53,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->speed = std::max(this->speed, MAX_REVERSE_SPEED);
 		}
 	}
-	if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE)) //idle
+	if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)) //idle
 	{
 		if (this->speed > 0.0f) //slow to a stop
 		{
@@ -69,7 +68,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	}
 
 	//steering
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) //left
 	{
 		if (this->currentDriverAnimation != DriverAnimationState::steerLeft)
 		{
@@ -82,7 +81,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->rotation = remainderf(this->rotation, 360.0f);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) //right
 	{
 		if (this->currentDriverAnimation != DriverAnimationState::steerRight)
 		{
@@ -95,7 +94,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->rotation = remainderf(this->rotation, 360.0f);
 		}
 	}
-	if ((glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE)) //idle
+	if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)) //idle
 	{
 		if (this->currentDriverAnimation != DriverAnimationState::steerNeutral)
 		{
@@ -103,8 +102,6 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->driverModel.playAnimation((int)this->currentDriverAnimation, true);
 		}
 	}
-
-	//TODO change current animation based on speed
 
 	//update models
 	this->driverModel.position.z += cos(glm::radians(this->rotation)) * this->speed;
