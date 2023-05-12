@@ -15,6 +15,8 @@ const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 finalBoneMatrices[MAX_BONES];
 	
 out vec2 TexCoords;
+out vec3 Normal;
+out vec3 FragPosition; //position in world space
 	
 void main()
 {
@@ -32,8 +34,11 @@ void main()
         totalPosition += localPosition * weights[i];
         //vec3 localNormal = mat3(finalBoneMatrices[boneIds[i]]) * norm;
     }
-		
+	
     mat4 viewModel = viewMatrix * modelMatrix;
     gl_Position =  projectionMatrix * viewModel * totalPosition;
+
     TexCoords = tex;
+    Normal = norm;
+    FragPosition = vec3(modelMatrix * vec4(pos, 1.0f));
 }

@@ -94,11 +94,13 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//prepare uniform data
+	glm::vec3 lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
 	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
 	staticShader->use();
+	staticShader->setVec3("lightPosition", lightPosition);
 	staticShader->setMat4("projectionMatrix", projection);
 	staticShader->setMat4("viewMatrix", view);
 	for (Model* model : staticModels)
@@ -108,6 +110,7 @@ void display()
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
+	animatedShader->setVec3("lightPosition", lightPosition);
 	animatedShader->setMat4("projectionMatrix", projection);
 	animatedShader->setMat4("viewMatrix", view);
 	for (AnimatedModel* model : animatedModels)
