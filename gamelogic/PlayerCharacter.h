@@ -58,5 +58,8 @@ private:
 	glm::vec3 cameraTargetOffset = glm::vec3(0.0f, 0.35f, 0.0f);
 	//the position the camera following the character should be targeting
 	glm::vec3 cameraTarget = this->characterPosition + this->cameraTargetOffset;
+
+	/*Plays the animation of the requested animationState if it is not already being played.*/
+	void useAnimationState(DriverAnimationState animationState, bool loopAnimation);
 };
 

@@ -67,11 +67,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	//steering
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) //left
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerLeft)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerLeft;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, false);
-		}
+		this->useAnimationState(DriverAnimationState::steerLeft, false);
 		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
 		{
 			this->rotation += std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
@@ -80,11 +76,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) //right
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerRight)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerRight;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, false);
-		}
+		this->useAnimationState(DriverAnimationState::steerRight, false);
 		if (this->speed < 0 || this->speed > 0) //can't turn if you're standing still
 		{
 			this->rotation -= std::min(TURNING_RATE * deltaTime, (TURNING_RATE * deltaTime) / abs(this->speed));
@@ -93,11 +85,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	}
 	if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)) //idle
 	{
-		if (this->currentDriverAnimation != DriverAnimationState::steerNeutral)
-		{
-			this->currentDriverAnimation = DriverAnimationState::steerNeutral;
-			this->driverModel.playAnimation((int)this->currentDriverAnimation, true);
-		}
+		this->useAnimationState(DriverAnimationState::steerNeutral, true);
 	}
 
 	//update position
@@ -111,4 +99,13 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 	this->carModel.position = this->characterPosition;
 	this->carModel.rotationYaw = this->rotation;
 	this->carModel.setAnimationSpeed(this->speed * 20.0f);
+}
+
+void PlayerCharacter::useAnimationState(DriverAnimationState animationState, bool loopAnimation)
+{
+	if (this->currentDriverAnimation != animationState)
+	{
+		this->currentDriverAnimation = animationState;
+		this->driverModel.playAnimation((int)this->currentDriverAnimation, loopAnimation);
+	}
 }
