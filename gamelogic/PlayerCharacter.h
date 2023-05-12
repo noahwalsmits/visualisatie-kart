@@ -16,6 +16,7 @@ public:
 	void unregisterModels(std::vector<Model*>& staticModels, std::vector<AnimatedModel*>& animatedModels);
 	glm::vec3& getCharacterPosition() { return this->characterPosition; }
 	glm::vec3& getCameraTarget() { return this->cameraTarget; }
+	float getRotation() { return this->rotation; }
 
 private:
 	//animation state values match with animation key on the driver model

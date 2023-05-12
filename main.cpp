@@ -125,8 +125,13 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
+	//update player
+	//camera tracks player rotation while still allowing mouse adjustment
+	float oldCharacterRotation = playerCharacter->getRotation();
 	playerCharacter->update(elapsed, window);
+	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldCharacterRotation));
 
+	//update animations
 	for (AnimatedModel* model : animatedModels)
 	{
 		model->update(elapsed);
