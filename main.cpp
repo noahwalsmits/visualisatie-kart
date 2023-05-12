@@ -94,6 +94,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//prepare uniform data
+	float ambientStrength = 0.2f;
 	glm::vec3 lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f); //white
 	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
@@ -101,6 +102,7 @@ void display()
 
 	//apply to static shader and draw static models
 	staticShader->use();
+	staticShader->setFloat("ambientStrength", ambientStrength);
 	staticShader->setVec3("lightPosition", lightPosition);
 	staticShader->setVec3("lightColor", lightColor);
 	staticShader->setMat4("projectionMatrix", projection);
@@ -112,6 +114,7 @@ void display()
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
+	animatedShader->setFloat("ambientStrength", ambientStrength);
 	animatedShader->setVec3("lightPosition", lightPosition);
 	animatedShader->setVec3("lightColor", lightColor);
 	animatedShader->setMat4("projectionMatrix", projection);

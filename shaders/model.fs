@@ -6,6 +6,7 @@ in vec3 Normal;
 in vec3 FragPosition; //position in world space
 
 uniform sampler2D texture_diffuse1;
+uniform float ambientStrength;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
@@ -16,15 +17,17 @@ void main()
     {
         discard;
     }
-    FragColor = texture(texture_diffuse1, TexCoords);
+    vec3 texture = vec3(texture(texture_diffuse1, TexCoords));
+
+    //ambient lighting
+    vec3 ambient = ambientStrength * lightColor;
 
     //diffuse lighting
     vec3 norm = normalize(Normal);
     vec3 lightDirection = normalize(lightPosition - FragPosition);
-    float diff = max(dot(norm, lightDirection), 0.0);
-    vec3 diffuse = diff * lightColor;
+    float diffuseStrength = max(dot(norm, lightDirection), 0.0);
+    vec3 diffuse = diffuseStrength * lightColor;
 
-    vec4 result = vec4(diffuse, 1.0);//
-    //vec3 result = (ambient + diffuse) * objectColor;
-    FragColor = FragColor * result;
+    vec3 result = (ambient + diffuse) * texture;
+    FragColor = vec4(result, 1.0);
 }
