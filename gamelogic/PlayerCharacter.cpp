@@ -50,7 +50,7 @@ void PlayerCharacter::update(float deltaTime, GLFWwindow* window)
 			this->speed = std::max(this->speed, MAX_REVERSE_SPEED);
 		}
 	}
-	if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)) //idle
+	if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE)) //idle
 	{
 		if (this->speed > 0.0f) //slow to a stop
 		{
