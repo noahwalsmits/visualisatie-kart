@@ -142,14 +142,14 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
-	//update player
+	//update characters
 	//camera tracks player rotation while still allowing mouse adjustment
-	float oldCharacterRotation = playerCharacter->getRotation();
+	float oldPlayerRotation = playerCharacter->getRotation();
 	for (PlayerCharacter* character : characters)
 	{
 		character->update(elapsed, window);
 	}
-	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldCharacterRotation));
+	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldPlayerRotation));
 
 	//update animations
 	for (AnimatedModel* model : animatedModels)
@@ -204,9 +204,11 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
+	//clean up characters
 	for (PlayerCharacter* character : characters)
 	{
 		character->unregisterModels(staticModels, animatedModels);
+		delete(character);
 	}
 
 	//clean up models
@@ -221,7 +223,6 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	delete(camera);
-	delete(playerCharacter);
 	delete(staticShader);
 	delete(animatedShader);
 }
