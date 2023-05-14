@@ -28,6 +28,16 @@ std::vector<Model*> staticModels;
 Shader* animatedShader;
 std::vector<AnimatedModel*> animatedModels;
 
+//rendering constants
+const float FOV = 80.0f;
+const float RENDER_DISTANCE = 350.0f;
+const glm::vec3 SKY_COLOR = glm::vec3(0.0f, 0.0f, 0.0f);
+
+//lighting values
+float ambientLightingStrength = 0.3f;
+glm::vec3 diffuseLightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
+glm::vec3 lightingColor = glm::vec3(0.6f, 0.6f, 1.0f);
+
 
 #ifdef _WIN32
 void GLAPIENTRY onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -52,7 +62,7 @@ void init()
 	}
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f); //TODO skybox color constant
+	glClearColor(SKY_COLOR.r, SKY_COLOR.g, SKY_COLOR.b, 1.0f);
 
 	playerCharacter = new PlayerCharacter();
 	playerCharacter->registerModels(staticModels, animatedModels);
@@ -97,17 +107,14 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//prepare uniform data
-	float ambientStrength = 0.3f;
-	glm::vec3 lightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
-	glm::vec3 lightColor = glm::vec3(0.6f, 0.6f, 1.0f);
-	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 350.0f); //TODO renderdistance constant
+	glm::mat4 projection = glm::perspective(glm::radians(FOV), screenSize.x / (float)screenSize.y, 0.01f, RENDER_DISTANCE);
 	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
 	staticShader->use();
-	staticShader->setFloat("ambientStrength", ambientStrength);
-	staticShader->setVec3("lightPosition", lightPosition);
-	staticShader->setVec3("lightColor", lightColor);
+	staticShader->setFloat("ambientStrength", ambientLightingStrength);
+	staticShader->setVec3("lightPosition", diffuseLightPosition);
+	staticShader->setVec3("lightColor", lightingColor);
 	staticShader->setMat4("projectionMatrix", projection);
 	staticShader->setMat4("viewMatrix", view);
 	for (Model* model : staticModels)
@@ -117,9 +124,9 @@ void display()
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
-	animatedShader->setFloat("ambientStrength", ambientStrength);
-	animatedShader->setVec3("lightPosition", lightPosition);
-	animatedShader->setVec3("lightColor", lightColor);
+	animatedShader->setFloat("ambientStrength", ambientLightingStrength);
+	animatedShader->setVec3("lightPosition", diffuseLightPosition);
+	animatedShader->setVec3("lightColor", lightingColor);
 	animatedShader->setMat4("projectionMatrix", projection);
 	animatedShader->setMat4("viewMatrix", view);
 	for (AnimatedModel* model : animatedModels)
