@@ -68,17 +68,9 @@ void init()
 	playerCharacter->registerModels(staticModels, animatedModels);
 	camera = new Camera(playerCharacter->getCameraTarget());
 
-	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f))); //this model has no normals
-	staticModels.push_back(new Model("assets/animated_egg1/egg1.dae", glm::vec3(-1.0f, 0.0f, 0.0f)));
 	staticModels.push_back(new Model("assets/arena_stage/stage.obj", glm::vec3(0.0f, -37.5f, 0.0f)));
-	staticShader = new Shader("model.vs", "model.fs");
 
-	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
-		{ 
-			{ 0, "assets/animated_yoshi/yoshiLeft.dae" },
-			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
-		},
-		glm::vec3(0.0f, 1.0f, 0.0f), 0));
+	staticShader = new Shader("model.vs", "model.fs");
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
@@ -180,7 +172,7 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(1280, 1024, "Shaders week 1", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "Visualisatie Kart", NULL, NULL);
 
 	if (window == nullptr)
 		return false;

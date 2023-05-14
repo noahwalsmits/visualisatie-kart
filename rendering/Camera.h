@@ -25,7 +25,7 @@ private:
 	const glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3& target; //reference to the position the camera is looking at
 	glm::vec3 position; //the current position of the camera
-	float distance = 3.0f; //distance between the camera and target positions
+	float distance = 2.0f; //distance between the camera and target positions
 	float yaw = -90.0f;
 	float pitch = 0.0f;
 
