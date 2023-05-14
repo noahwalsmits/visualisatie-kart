@@ -55,7 +55,7 @@ private:
 	//the current position of the character
 	glm::vec3 characterPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	//the offset between the character position and the camera target position
-	glm::vec3 cameraTargetOffset = glm::vec3(0.0f, 0.35f, 0.0f);
+	glm::vec3 cameraTargetOffset = glm::vec3(0.0f, 0.7f, 0.0f);
 	//the position the camera following the character should be targeting
 	glm::vec3 cameraTarget = this->characterPosition + this->cameraTargetOffset;
 

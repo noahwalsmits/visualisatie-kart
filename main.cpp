@@ -72,7 +72,6 @@ void init()
 	staticModels.push_back(new Model("assets/animated_egg1/egg1.dae", glm::vec3(-1.0f, 0.0f, 0.0f)));
 	staticModels.push_back(new Model("assets/arena_stage/stage.obj", glm::vec3(0.0f, -37.5f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
-	//TODO prevent camera from going beneath the floor
 
 	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
 		{ 
