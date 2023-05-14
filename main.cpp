@@ -52,7 +52,7 @@ void init()
 	}
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f); //TODO skybox color constant
 
 	playerCharacter = new PlayerCharacter();
 	playerCharacter->registerModels(staticModels, animatedModels);
@@ -60,7 +60,10 @@ void init()
 
 	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f))); //this model has no normals
 	staticModels.push_back(new Model("assets/animated_egg1/egg1.dae", glm::vec3(-1.0f, 0.0f, 0.0f)));
+	//staticModels.push_back(new Model("assets/stage/stage.obj", glm::vec3(0.0f, -6.25f, 0.0f)));
+	staticModels.push_back(new Model("assets/arena_stage/stage.obj", glm::vec3(0.0f, -37.5f, 0.0f)));
 	staticShader = new Shader("model.vs", "model.fs");
+	//TODO prevent camera from going beneath the floor
 
 	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
 		{ 
@@ -98,7 +101,7 @@ void display()
 	float ambientStrength = 0.4f;
 	glm::vec3 lightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f); //white
-	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 350.0f); //TODO renderdistance constant
 	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
