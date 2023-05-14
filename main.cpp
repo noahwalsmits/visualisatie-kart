@@ -20,8 +20,10 @@ double lastTime;
 double lastMouseX;
 double lastMouseY;
 
-Camera* camera;
+const int CHARACTER_COUNT = 1;
+std::vector<PlayerCharacter*> characters;
 PlayerCharacter* playerCharacter;
+Camera* camera;
 
 Shader* staticShader;
 std::vector<Model*> staticModels;
@@ -64,8 +66,13 @@ void init()
 	glEnable(GL_BLEND);
 	glClearColor(SKY_COLOR.r, SKY_COLOR.g, SKY_COLOR.b, 1.0f);
 
-	playerCharacter = new PlayerCharacter();
-	playerCharacter->registerModels(staticModels, animatedModels);
+	assert(CHARACTER_COUNT > 0);
+	for (int i = 0; i < CHARACTER_COUNT; i++)
+	{
+		characters.push_back(new PlayerCharacter(glm::vec3(1.0f * i, 0.0f, 0.0f)));
+		characters[i]->registerModels(staticModels, animatedModels);
+	}
+	playerCharacter = characters[0];
 	camera = new Camera(playerCharacter->getCameraTarget());
 
 	staticModels.push_back(new Model("assets/arena_stage/stage.obj", glm::vec3(0.0f, -37.5f, 0.0f)));
@@ -138,7 +145,10 @@ void update()
 	//update player
 	//camera tracks player rotation while still allowing mouse adjustment
 	float oldCharacterRotation = playerCharacter->getRotation();
-	playerCharacter->update(elapsed, window);
+	for (PlayerCharacter* character : characters)
+	{
+		character->update(elapsed, window);
+	}
 	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldCharacterRotation));
 
 	//update animations
@@ -194,7 +204,10 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	playerCharacter->unregisterModels(staticModels, animatedModels);
+	for (PlayerCharacter* character : characters)
+	{
+		character->unregisterModels(staticModels, animatedModels);
+	}
 
 	//clean up models
 	for (Model* model : staticModels)

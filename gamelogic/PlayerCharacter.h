@@ -5,7 +5,7 @@
 class PlayerCharacter
 {
 public:
-	PlayerCharacter()
+	PlayerCharacter(glm::vec3 startPosition) : characterPosition(startPosition)
 	{
 		this->driverModel.offset = glm::vec3(0.0f, 0.35f, -0.2f);
 		this->carModel.playAnimation(0);
@@ -53,7 +53,7 @@ private:
 	//the current direction in degrees
 	float rotation = 0.0f;
 	//the current position of the character
-	glm::vec3 characterPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 characterPosition;
 	//the offset between the character position and the camera target position
 	glm::vec3 cameraTargetOffset = glm::vec3(0.0f, 0.7f, 0.0f);
 	//the position the camera following the character should be targeting
