@@ -20,13 +20,25 @@ double lastTime;
 double lastMouseX;
 double lastMouseY;
 
-Camera* camera;
+const int CHARACTER_COUNT = 1;
+std::vector<PlayerCharacter*> characters;
 PlayerCharacter* playerCharacter;
+Camera* camera;
 
 Shader* staticShader;
 std::vector<Model*> staticModels;
 Shader* animatedShader;
 std::vector<AnimatedModel*> animatedModels;
+
+//rendering constants
+const float FOV = 80.0f;
+const float RENDER_DISTANCE = 350.0f;
+const glm::vec3 SKY_COLOR = glm::vec3(0.0f, 0.0f, 0.0f);
+
+//lighting values
+float ambientLightingStrength = 0.3f;
+glm::vec3 diffuseLightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
+glm::vec3 lightingColor = glm::vec3(0.6f, 0.6f, 1.0f);
 
 
 #ifdef _WIN32
@@ -52,22 +64,20 @@ void init()
 	}
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glClearColor(SKY_COLOR.r, SKY_COLOR.g, SKY_COLOR.b, 1.0f);
 
-	playerCharacter = new PlayerCharacter();
-	playerCharacter->registerModels(staticModels, animatedModels);
+	assert(CHARACTER_COUNT > 0);
+	for (int i = 0; i < CHARACTER_COUNT; i++)
+	{
+		characters.push_back(new PlayerCharacter(glm::vec3(1.0f * i, 0.0f, 0.0f)));
+		characters[i]->registerModels(staticModels, animatedModels);
+	}
+	playerCharacter = characters[0];
 	camera = new Camera(playerCharacter->getCameraTarget());
 
-	staticModels.push_back(new Model("assets/Cucumber/kart_YS_c.obj", glm::vec3(1.0f, 0.0f, 0.0f))); //this model has no normals
-	staticModels.push_back(new Model("assets/animated_egg1/egg1.dae", glm::vec3(-1.0f, 0.0f, 0.0f)));
-	staticShader = new Shader("model.vs", "model.fs");
+	staticModels.push_back(new Model("assets/arena_stage/stage.obj", glm::vec3(0.0f, -37.5f, 0.0f)));
 
-	animatedModels.push_back(new AnimatedModel("assets/animated_yoshi/yoshi.dae",
-		{ 
-			{ 0, "assets/animated_yoshi/yoshiLeft.dae" },
-			{ 1, "assets/animated_yoshi/yoshiRight.dae" } 
-		},
-		glm::vec3(0.0f, 1.0f, 0.0f), 0));
+	staticShader = new Shader("model.vs", "model.fs");
 	animatedShader = new Shader("model_animated.vs", "model.fs");
 
 	if (glDebugMessageCallback)
@@ -95,17 +105,14 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//prepare uniform data
-	float ambientStrength = 0.4f;
-	glm::vec3 lightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
-	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f); //white
-	glm::mat4 projection = glm::perspective(glm::radians(80.0f), screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(FOV), screenSize.x / (float)screenSize.y, 0.01f, RENDER_DISTANCE);
 	glm::mat4 view = camera->getViewMatrix();
 
 	//apply to static shader and draw static models
 	staticShader->use();
-	staticShader->setFloat("ambientStrength", ambientStrength);
-	staticShader->setVec3("lightPosition", lightPosition);
-	staticShader->setVec3("lightColor", lightColor);
+	staticShader->setFloat("ambientStrength", ambientLightingStrength);
+	staticShader->setVec3("lightPosition", diffuseLightPosition);
+	staticShader->setVec3("lightColor", lightingColor);
 	staticShader->setMat4("projectionMatrix", projection);
 	staticShader->setMat4("viewMatrix", view);
 	for (Model* model : staticModels)
@@ -115,9 +122,9 @@ void display()
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
-	animatedShader->setFloat("ambientStrength", ambientStrength);
-	animatedShader->setVec3("lightPosition", lightPosition);
-	animatedShader->setVec3("lightColor", lightColor);
+	animatedShader->setFloat("ambientStrength", ambientLightingStrength);
+	animatedShader->setVec3("lightPosition", diffuseLightPosition);
+	animatedShader->setVec3("lightColor", lightingColor);
 	animatedShader->setMat4("projectionMatrix", projection);
 	animatedShader->setMat4("viewMatrix", view);
 	for (AnimatedModel* model : animatedModels)
@@ -135,11 +142,14 @@ void update()
 	double elapsed = time - lastTime;
 	lastTime = time;
 
-	//update player
+	//update characters
 	//camera tracks player rotation while still allowing mouse adjustment
-	float oldCharacterRotation = playerCharacter->getRotation();
-	playerCharacter->update(elapsed, window);
-	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldCharacterRotation));
+	float oldPlayerRotation = playerCharacter->getRotation();
+	for (PlayerCharacter* character : characters)
+	{
+		character->update(elapsed, window);
+	}
+	camera->setYaw(camera->getYaw() - (playerCharacter->getRotation() - oldPlayerRotation));
 
 	//update animations
 	for (AnimatedModel* model : animatedModels)
@@ -172,7 +182,7 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(1280, 1024, "Shaders week 1", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "Visualisatie Kart", NULL, NULL);
 
 	if (window == nullptr)
 		return false;
@@ -194,7 +204,12 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	playerCharacter->unregisterModels(staticModels, animatedModels);
+	//clean up characters
+	for (PlayerCharacter* character : characters)
+	{
+		character->unregisterModels(staticModels, animatedModels);
+		delete(character);
+	}
 
 	//clean up models
 	for (Model* model : staticModels)
@@ -208,7 +223,6 @@ int main(int argc, char* argv[])
 
 	//clean up pointers
 	delete(camera);
-	delete(playerCharacter);
 	delete(staticShader);
 	delete(animatedShader);
 }
