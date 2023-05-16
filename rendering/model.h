@@ -38,7 +38,6 @@ private:
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Mesh::Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	unsigned int textureFromFile(const char* path, const std::string& directory);
-	void SetVertexBoneDataToDefault(Mesh::Vertex& vertex);
 	void ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
 	void SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight);
 };

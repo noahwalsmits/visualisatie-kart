@@ -109,7 +109,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		}
 
 		Mesh::Vertex vertex(tempPositions, tempNormals, tempTexCoords);
-		SetVertexBoneDataToDefault(vertex);
 		vertices.push_back(vertex);
 	}
 
@@ -218,15 +217,6 @@ unsigned int Model::textureFromFile(const char* path, const std::string& directo
 	return textureID;
 }
 
-void Model::SetVertexBoneDataToDefault(Mesh::Vertex& vertex)
-{
-	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-	{
-		vertex.boneIds[i] = -1;
-		vertex.boneWeights[i] = 0.0f;
-	}
-}
-
 void Model::ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
@@ -262,7 +252,7 @@ void Model::ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, ai
 
 void Model::SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight)
 {
-	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+	for (int i = 0; i < vertex.MAX_BONE_INFLUENCE; i++)
 	{
 		if (vertex.boneIds[i] < 0)
 		{
