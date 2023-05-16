@@ -20,31 +20,25 @@ public:
 	float scale = 1.0f; //size multplier of the model
 
 	/*Loads a 3D model using ASSIMP*/
-	Model(std::string const &path, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f))
-	{
-		this->loadModel(path);
-		this->position = startPosition;
-		this->offset = glm::vec3(0.0f, 0.0f, 0.0f);
-	}
+	Model(std::string const& path, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
 	virtual void draw(Shader &shader);
 
 	auto& getBoneInfoMap() { return this->boneInfoMap; }
-	int& getBoneCount() { return this->boneCounter; }
+	int& getBoneCount() { return this->boneCount; }
 
 private:
 	std::vector<Mesh> meshes;
 	std::string directory;
 	std::vector<Mesh::Texture> texturesLoaded;
+	std::map<std::string, Mesh::BoneInfo> boneInfoMap;
+	int boneCount = 0;
 
 	void loadModel(std::string path);
 	void processNode(aiNode* node, const aiScene* scene);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Mesh::Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	unsigned int textureFromFile(const char* path, const std::string& directory);
-
-	std::map<std::string, Mesh::BoneInfo> boneInfoMap;
-	int boneCounter = 0;
 	void SetVertexBoneDataToDefault(Mesh::Vertex& vertex);
-	void SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight);
 	void ExtractBoneWeightForVertices(std::vector<Mesh::Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
+	void SetVertexBoneData(Mesh::Vertex& vertex, int boneID, float weight);
 };
