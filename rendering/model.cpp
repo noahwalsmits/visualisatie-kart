@@ -39,11 +39,11 @@ void Model::draw(Shader &shader)
 
 void Model::loadModel(std::string path)
 {
+	std::cout << "Loading model: " << path << std::endl;
 	Assimp::Importer importer;
 	//aiProcess_Triangulate transforms all primitive shapes into triangles, if they are not already
 	//aiProcess_FlipUVs flips textures on the y-axis
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-	//const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -172,7 +172,7 @@ std::vector<Mesh::Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextur
 
 unsigned int Model::textureFromFile(const char* path, const std::string& directory)
 {
-	std::cout << "Loading texture: " << path << std::endl;//
+	std::cout << "\tLoading texture: " << path << std::endl;
 	std::string fileName = std::string(path);
 	fileName = directory + '/' + fileName;
 	
