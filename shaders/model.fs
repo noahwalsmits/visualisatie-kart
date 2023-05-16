@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec3 Normal;
-in vec3 FragPosition; //position in world space
+in vec3 FragPosition; //fragment position in world space
 
 uniform sampler2D texture_diffuse1;
 uniform float ambientStrength;
