@@ -16,10 +16,11 @@ uniform mat4 projectionMatrix;
 
 out vec2 TexCoords;
 out vec3 Normal;
-out vec3 FragPosition; //position in world space
+out vec3 FragPosition; //fragment position in world space
 
 void main()
 {
+    //apply bone transformations to position and normal
     vec4 totalPosition = vec4(0.0f);
     vec3 totalNormal = vec3(0.0);
     for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
