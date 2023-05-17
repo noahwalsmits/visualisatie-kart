@@ -13,14 +13,14 @@ Animator::Animator()
 	}
 }
 
-void Animator::UpdateAnimation(float dt)
+void Animator::UpdateAnimation(float deltaTime)
 {
 	if (this->finished) //TODO support no current animation and check for it here
 	{
 		return;
 	}
 
-	this->currentTime += this->speed * this->currentAnimation.getTicksPerSecond() * dt;
+	this->currentTime += this->speed * this->currentAnimation.getTicksPerSecond() * deltaTime;
 	if (this->looping) //restart animation
 	{
 		this->currentTime = fmod(this->currentTime, this->currentAnimation.getDuration());
@@ -42,10 +42,10 @@ void Animator::UpdateAnimation(float dt)
 	CalculateBoneTransform(&this->currentAnimation.getRootNode(), glm::mat4(1.0f));
 }
 
-void Animator::PlayAnimation(Animation pAnimation, bool loopAnimation, float animationSpeed)
+void Animator::PlayAnimation(Animation animation, bool loopAnimation, float animationSpeed)
 {
 	//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
-	this->currentAnimation = pAnimation;
+	this->currentAnimation = animation;
 	this->currentTime = 0.0f;
 	this->speed = animationSpeed;
 	this->looping = loopAnimation;
