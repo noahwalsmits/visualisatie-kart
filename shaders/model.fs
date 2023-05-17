@@ -9,6 +9,7 @@ uniform sampler2D texture_diffuse1;
 uniform float ambientStrength;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
+uniform vec3 viewPosition;
 
 void main()
 {
@@ -28,6 +29,14 @@ void main()
     float diffuseStrength = max(dot(norm, lightDirection), 0.0);
     vec3 diffuse = diffuseStrength * lightColor;
 
-    vec3 result = (ambient + diffuse) * texture;
+    //specular lighting
+    float specularStrength = 1.0;
+    int shinyness = 64; //TODO make these configurable with uniforms
+    vec3 viewDirection = normalize(viewPosition - FragPosition);
+    vec3 reflectionDirection = reflect(-lightDirection, norm);
+    float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0), shinyness);
+    vec3 specular = specularStrength * spec * lightColor;  
+
+    vec3 result = (ambient + diffuse + specular) * texture;
     FragColor = vec4(result, 1.0);
 }

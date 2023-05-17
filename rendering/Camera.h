@@ -11,6 +11,7 @@ public:
 	void mouseMoved(double deltaX, double deltaY);
 	void pollMovementKeys(float deltaTime, GLFWwindow* window);
 
+	glm::vec3 getPosition() { return this->position; }
 	float getYaw() { return this->yaw; }
 	void setYaw(float yaw) { this->yaw = yaw; }
 	float getPitch() { return this->pitch; }
