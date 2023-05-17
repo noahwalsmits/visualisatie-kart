@@ -26,17 +26,17 @@ public:
 
     Bone* FindBone(const std::string& name);
 
-    inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-    inline float GetDuration() { return m_Duration; }
-    inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-    inline const std::map<std::string, Mesh::BoneInfo>& GetBoneIDMap() { return m_BoneInfoMap; }
+    inline float GetTicksPerSecond() { return this->ticksPerSecond; }
+    inline float GetDuration() { return this->duration; }
+    inline const AssimpNodeData& GetRootNode() { return this->rootNode; }
+    inline const std::map<std::string, Mesh::BoneInfo>& GetBoneIDMap() { return this->boneInfoMap; }
 
 private:
-    float m_Duration;
-    int m_TicksPerSecond;
-    std::vector<Bone> m_Bones;
-    AssimpNodeData m_RootNode;
-    std::map<std::string, Mesh::BoneInfo> m_BoneInfoMap;
+    float duration;
+    int ticksPerSecond;
+    std::vector<Bone> bones;
+    AssimpNodeData rootNode;
+    std::map<std::string, Mesh::BoneInfo> boneInfoMap;
 
     void ReadMissingBones(const aiAnimation* animation, Model& model);
     void ReadHeirarchyData(AssimpNodeData& dest, const aiNode* src);
