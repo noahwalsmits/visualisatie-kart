@@ -12,11 +12,11 @@ public:
 
 	Animator();
 
-	void UpdateAnimation(float deltaTime);
-	void PlayAnimation(Animation animation, bool loopAnimation = true, float animationSpeed = 1.0f);
-	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
+	void updateAnimation(float deltaTime);
+	void playAnimation(Animation animation, bool loopAnimation = true, float animationSpeed = 1.0f);
+	void calculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
 
-	std::vector<glm::mat4> GetFinalBoneMatrices() { return finalBoneMatrices; }
+	std::vector<glm::mat4> getFinalBoneMatrices() { return finalBoneMatrices; }
 
 private:
 	std::vector<glm::mat4> finalBoneMatrices;

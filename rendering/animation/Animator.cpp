@@ -13,7 +13,7 @@ Animator::Animator()
 	}
 }
 
-void Animator::UpdateAnimation(float deltaTime)
+void Animator::updateAnimation(float deltaTime)
 {
 	if (this->finished) //TODO support no current animation and check for it here
 	{
@@ -39,10 +39,10 @@ void Animator::UpdateAnimation(float deltaTime)
 		this->finished = true;
 		this->currentTime = 0.0f;
 	}
-	CalculateBoneTransform(&this->currentAnimation.getRootNode(), glm::mat4(1.0f));
+	calculateBoneTransform(&this->currentAnimation.getRootNode(), glm::mat4(1.0f));
 }
 
-void Animator::PlayAnimation(Animation animation, bool loopAnimation, float animationSpeed)
+void Animator::playAnimation(Animation animation, bool loopAnimation, float animationSpeed)
 {
 	//TODO pointer doesn't work here because the AnimatedModel is copied when added to the vector
 	this->currentAnimation = animation;
@@ -56,7 +56,7 @@ void Animator::PlayAnimation(Animation animation, bool loopAnimation, float anim
 	}
 }
 
-void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+void Animator::calculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
 {
 	std::string nodeName = node->name;
 	glm::mat4 nodeTransform = node->transformation;
@@ -65,8 +65,8 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 pare
 
 	if (Bone)
 	{
-		Bone->Update(this->currentTime);
-		nodeTransform = Bone->GetLocalTransform();
+		Bone->update(this->currentTime);
+		nodeTransform = Bone->getLocalTransform();
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
@@ -81,6 +81,6 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 pare
 
 	for (int i = 0; i < node->childrenCount; i++)
 	{
-		CalculateBoneTransform(&node->children[i], globalTransformation);
+		calculateBoneTransform(&node->children[i], globalTransformation);
 	}
 }

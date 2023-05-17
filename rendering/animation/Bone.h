@@ -47,31 +47,31 @@ public:
 	/*interpolates  b/w positions,rotations & scaling keys based on the curretn time of
 	the animation and prepares the local transformation matrix by combining all keys
 	tranformations*/
-	void Update(float animationTime);
-	glm::mat4 GetLocalTransform() { return m_LocalTransform; }
-	std::string GetBoneName() const { return m_Name; }
-	int GetBoneID() { return m_ID; }
+	void update(float animationTime);
+	glm::mat4 getLocalTransform() { return m_LocalTransform; }
+	std::string getBoneName() const { return m_Name; }
+	int getBoneID() { return m_ID; }
 
 	/* Gets the current index on mKeyPositions to interpolate to based on
 	the current animation time*/
-	int GetPositionIndex(float animationTime);
+	int getPositionIndex(float animationTime);
 	/* Gets the current index on mKeyRotations to interpolate to based on the
 	current animation time*/
-	int GetRotationIndex(float animationTime);
+	int getRotationIndex(float animationTime);
 	/* Gets the current index on mKeyScalings to interpolate to based on the
 	current animation time */
-	int GetScaleIndex(float animationTime);
+	int getScaleIndex(float animationTime);
 
 private:
 	/* Gets normalized value for Lerp & Slerp*/
-	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+	float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 	/*figures out which position keys to interpolate b/w and performs the interpolation
 	and returns the translation matrix*/
-	glm::mat4 InterpolatePosition(float animationTime);
+	glm::mat4 interpolatePosition(float animationTime);
 	/*figures out which rotations keys to interpolate b/w and performs the interpolation
 	and returns the rotation matrix*/
-	glm::mat4 InterpolateRotation(float animationTime);
+	glm::mat4 interpolateRotation(float animationTime);
 	/*figures out which scaling keys to interpolate b/w and performs the interpolation
 	and returns the scale matrix*/
-	glm::mat4 InterpolateScaling(float animationTime);
+	glm::mat4 interpolateScaling(float animationTime);
 };

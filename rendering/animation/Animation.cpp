@@ -23,7 +23,7 @@ Bone* Animation::findBone(const std::string& name)
 	auto iterator = std::find_if(this->bones.begin(), this->bones.end(),
 		[&](const Bone& Bone)
 		{
-			return Bone.GetBoneName() == name;
+			return Bone.getBoneName() == name;
 		}
 	);
 	if (iterator == this->bones.end())
