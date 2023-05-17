@@ -16,12 +16,12 @@ public:
 	void PlayAnimation(Animation pAnimation, bool loopAnimation = true, float animationSpeed = 1.0f);
 	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
 
-	std::vector<glm::mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }
+	std::vector<glm::mat4> GetFinalBoneMatrices() { return finalBoneMatrices; }
 
 private:
-	std::vector<glm::mat4> m_FinalBoneMatrices;
-	Animation m_CurrentAnimation;
-	float m_CurrentTime;
+	std::vector<glm::mat4> finalBoneMatrices;
+	Animation currentAnimation;
+	float currentTime;
 	bool looping = true;
 	bool finished = true;
 };
