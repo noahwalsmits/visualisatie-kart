@@ -28,18 +28,6 @@ struct KeyScale
 
 class Bone
 {
-private:
-	std::vector<KeyPosition> m_Positions;
-	std::vector<KeyRotation> m_Rotations;
-	std::vector<KeyScale> m_Scales;
-	int m_NumPositions;
-	int m_NumRotations;
-	int m_NumScalings;
-
-	glm::mat4 m_LocalTransform;
-	std::string m_Name;
-	int m_ID;
-
 public:
 	/*reads keyframes from aiNodeAnim*/
 	Bone(const std::string& name, int ID, const aiNodeAnim* channel);
@@ -48,9 +36,9 @@ public:
 	the animation and prepares the local transformation matrix by combining all keys
 	tranformations*/
 	void update(float animationTime);
-	glm::mat4 getLocalTransform() { return m_LocalTransform; }
-	std::string getBoneName() const { return m_Name; }
-	int getBoneID() { return m_ID; }
+	glm::mat4 getLocalTransform() { return localTransform; }
+	std::string getBoneName() const { return name; }
+	int getBoneID() { return boneID; }
 
 	/* Gets the current index on mKeyPositions to interpolate to based on
 	the current animation time*/
@@ -63,6 +51,17 @@ public:
 	int getScaleIndex(float animationTime);
 
 private:
+	std::vector<KeyPosition> positions;
+	std::vector<KeyRotation> rotations;
+	std::vector<KeyScale> scales;
+	int numPositions;
+	int numRotations;
+	int numScalings;
+
+	glm::mat4 localTransform;
+	std::string name;
+	int boneID;
+
 	/* Gets normalized value for Lerp & Slerp*/
 	float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 	/*figures out which position keys to interpolate b/w and performs the interpolation
