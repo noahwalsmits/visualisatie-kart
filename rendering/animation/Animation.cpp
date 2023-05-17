@@ -14,11 +14,11 @@ Animation::Animation(const std::string& animationPath, Model* model)
 	auto animation = scene->mAnimations[0];
 	this->duration = animation->mDuration;
 	this->ticksPerSecond = animation->mTicksPerSecond;
-	ReadHeirarchyData(this->rootNode, scene->mRootNode);
-	ReadMissingBones(animation, *model);
+	readHeirarchyData(this->rootNode, scene->mRootNode);
+	readMissingBones(animation, *model);
 }
 
-Bone* Animation::FindBone(const std::string& name)
+Bone* Animation::findBone(const std::string& name)
 {
 	auto iterator = std::find_if(this->bones.begin(), this->bones.end(),
 		[&](const Bone& Bone)
@@ -36,7 +36,7 @@ Bone* Animation::FindBone(const std::string& name)
 	}
 }
 
-void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
+void Animation::readMissingBones(const aiAnimation* animation, Model& model)
 {
 	int size = animation->mNumChannels;
 
@@ -60,7 +60,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 	this->boneInfoMap = modelBoneInfoMap;
 }
 
-void Animation::ReadHeirarchyData(AssimpNodeData& dest, const aiNode* src)
+void Animation::readHeirarchyData(AssimpNodeData& dest, const aiNode* src)
 {
 	assert(src);
 
@@ -71,7 +71,7 @@ void Animation::ReadHeirarchyData(AssimpNodeData& dest, const aiNode* src)
 	for (int i = 0; i < src->mNumChildren; i++)
 	{
 		AssimpNodeData newData;
-		ReadHeirarchyData(newData, src->mChildren[i]);
+		readHeirarchyData(newData, src->mChildren[i]);
 		dest.children.push_back(newData);
 	}
 }

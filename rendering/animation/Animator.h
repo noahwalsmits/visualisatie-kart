@@ -30,26 +30,26 @@ public:
 			return;
 		}
 
-		m_CurrentTime += this->speed * m_CurrentAnimation.GetTicksPerSecond() * dt;
+		m_CurrentTime += this->speed * m_CurrentAnimation.getTicksPerSecond() * dt;
 		if (this->looping) //restart animation
 		{
-			m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+			m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.getDuration());
 			if (m_CurrentTime < 0)
 			{
-				m_CurrentTime = m_CurrentAnimation.GetDuration() + m_CurrentTime;
+				m_CurrentTime = m_CurrentAnimation.getDuration() + m_CurrentTime;
 			}
 		}
-		else if (m_CurrentTime >= m_CurrentAnimation.GetDuration()) //end animation
+		else if (m_CurrentTime >= m_CurrentAnimation.getDuration()) //end animation
 		{
 			this->finished = true;
-			m_CurrentTime = std::nextafter(m_CurrentAnimation.GetDuration(), 0.0f); //set it to a value just under the duration
+			m_CurrentTime = std::nextafter(m_CurrentAnimation.getDuration(), 0.0f); //set it to a value just under the duration
 		}
 		else if (m_CurrentTime < 0.0f) //end reverse animation
 		{
 			this->finished = true;
 			m_CurrentTime = 0.0f;
 		}
-		CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
+		CalculateBoneTransform(&m_CurrentAnimation.getRootNode(), glm::mat4(1.0f));
 	}
 
 	void PlayAnimation(Animation pAnimation, bool loopAnimation = true, float animationSpeed = 1.0f)
@@ -62,7 +62,7 @@ public:
 		this->finished = false;
 		if (this->speed < 0) //reverse animations start at the end and count down from there
 		{
-			m_CurrentTime = std::nextafter(m_CurrentAnimation.GetDuration(), 0.0f); //set it to a value just under the duration
+			m_CurrentTime = std::nextafter(m_CurrentAnimation.getDuration(), 0.0f); //set it to a value just under the duration
 		}
 	}
 
@@ -71,7 +71,7 @@ public:
 		std::string nodeName = node->name;
 		glm::mat4 nodeTransform = node->transformation;
 
-		Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+		Bone* Bone = m_CurrentAnimation.findBone(nodeName);
 
 		if (Bone)
 		{
@@ -81,7 +81,7 @@ public:
 
 		glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-		auto boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
+		auto boneInfoMap = m_CurrentAnimation.getBoneIDMap();
 		if (boneInfoMap.find(nodeName) != boneInfoMap.end())
 		{
 			int index = boneInfoMap[nodeName].id;
