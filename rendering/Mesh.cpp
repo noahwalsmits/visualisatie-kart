@@ -56,7 +56,7 @@ void Mesh::draw(Shader &shader) {
 	for (unsigned int i = 0; i < this->textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i); //activate proper texture unit before binding
 
-		// retrieve texture number (the N in diffuse_textureN)
+		//get texture number
 		std::string number;
 		std::string name = this->textures[i].type;
 		if (name == "texture_diffuse") {
@@ -66,15 +66,15 @@ void Mesh::draw(Shader &shader) {
 			number = std::to_string(specularNr++);
 		}
 
-		shader.setInt(("material." + name + number).c_str(), i); //TODO remove "material."?
+		shader.setInt(("material." + name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 	}
 
 	//draw mesh
 	glBindVertexArray(this->VAO);
 	glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 
 	//set everything back to defaults
+	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);
 }

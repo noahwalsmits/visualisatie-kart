@@ -40,6 +40,15 @@ float ambientLightingStrength = 0.3f;
 glm::vec3 diffuseLightPosition = glm::vec3(0.0f, 1000.0f, 0.0f);
 glm::vec3 lightingColor = glm::vec3(0.6f, 0.6f, 1.0f);
 
+//uniform names
+static const std::string UNIFORM_AMBIENT_STRENGTH = "ambientStrength";
+static const std::string UNIFORM_LIGHT_POSITION = "lightPosition";
+static const std::string UNIFORM_LIGHT_COLOR = "lightColor";
+static const std::string UNIFORM_VIEW_POSITION = "viewPosition";
+static const std::string UNIFORM_PROJECTION_MATRIX = "projectionMatrix";
+static const std::string UNIFORM_VIEW_MATRIX = "viewMatrix";
+static const std::string UNIFORM_MODEL_MATRIX = "modelMatrix";
+
 
 #ifdef _WIN32
 void GLAPIENTRY onDebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -110,11 +119,12 @@ void display()
 
 	//apply to static shader and draw static models
 	staticShader->use();
-	staticShader->setFloat("ambientStrength", ambientLightingStrength);
-	staticShader->setVec3("lightPosition", diffuseLightPosition);
-	staticShader->setVec3("lightColor", lightingColor);
-	staticShader->setMat4("projectionMatrix", projection);
-	staticShader->setMat4("viewMatrix", view);
+	staticShader->setFloat(UNIFORM_AMBIENT_STRENGTH, ambientLightingStrength);
+	staticShader->setVec3(UNIFORM_LIGHT_POSITION, diffuseLightPosition);
+	staticShader->setVec3(UNIFORM_LIGHT_COLOR, lightingColor);
+	staticShader->setVec3(UNIFORM_VIEW_POSITION, camera->getPosition());
+	staticShader->setMat4(UNIFORM_PROJECTION_MATRIX, projection);
+	staticShader->setMat4(UNIFORM_VIEW_MATRIX, view);
 	for (Model* model : staticModels)
 	{
 		model->draw(*staticShader);
@@ -122,11 +132,12 @@ void display()
 
 	//apply to animated shader and draw animated models
 	animatedShader->use();
-	animatedShader->setFloat("ambientStrength", ambientLightingStrength);
-	animatedShader->setVec3("lightPosition", diffuseLightPosition);
-	animatedShader->setVec3("lightColor", lightingColor);
-	animatedShader->setMat4("projectionMatrix", projection);
-	animatedShader->setMat4("viewMatrix", view);
+	animatedShader->setFloat(UNIFORM_AMBIENT_STRENGTH, ambientLightingStrength);
+	animatedShader->setVec3(UNIFORM_LIGHT_POSITION, diffuseLightPosition);
+	animatedShader->setVec3(UNIFORM_LIGHT_COLOR, lightingColor);
+	animatedShader->setVec3(UNIFORM_VIEW_POSITION, camera->getPosition());
+	animatedShader->setMat4(UNIFORM_PROJECTION_MATRIX, projection);
+	animatedShader->setMat4(UNIFORM_VIEW_MATRIX, view);
 	for (AnimatedModel* model : animatedModels)
 	{
 		model->draw(*animatedShader);

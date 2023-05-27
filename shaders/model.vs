@@ -5,7 +5,7 @@ layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 out vec3 Normal;
-out vec3 FragPosition; //position in world space
+out vec3 FragPosition; //fragment position in world space
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -15,6 +15,6 @@ void main()
 {
     TexCoords = aTexCoords;
     Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
     FragPosition = vec3(modelMatrix * vec4(aPos, 1.0));
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0); //the order of multiplication is important here
 }
