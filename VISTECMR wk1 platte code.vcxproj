@@ -21,14 +21,20 @@
   <ItemGroup>
     <None Include="shaders\model.fs" />
     <None Include="shaders\model.vs" />
+    <None Include="shaders\model_animated.vs" />
     <None Include="shaders\simple.fs" />
     <None Include="shaders\simple.vs" />
     <None Include="shaders\texture.fs" />
     <None Include="shaders\texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gamelogic\PlayerCharacter.cpp" />
     <ClCompile Include="libs\glad\src\glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rendering\animation\AnimatedModel.cpp" />
+    <ClCompile Include="rendering\animation\Animation.cpp" />
+    <ClCompile Include="rendering\animation\Animator.cpp" />
+    <ClCompile Include="rendering\animation\Bone.cpp" />
     <ClCompile Include="rendering\Camera.cpp" />
     <ClCompile Include="rendering\Mesh.cpp" />
     <ClCompile Include="rendering\model.cpp" />
@@ -36,6 +42,12 @@
     <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssimpGLMHelpers.h" />
+    <ClInclude Include="gamelogic\PlayerCharacter.h" />
+    <ClInclude Include="rendering\animation\AnimatedModel.h" />
+    <ClInclude Include="rendering\animation\Animation.h" />
+    <ClInclude Include="rendering\animation\Animator.h" />
+    <ClInclude Include="rendering\animation\Bone.h" />
     <ClInclude Include="rendering\Camera.h" />
     <ClInclude Include="rendering\Mesh.h" />
     <ClInclude Include="rendering\model.h" />
@@ -73,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
